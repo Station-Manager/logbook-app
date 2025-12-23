@@ -1,5 +1,5 @@
 version: '3'
-
+dotenv: ['../.env','./env']
 vars:
   MODULE_NAME: "Logbook App"
 
@@ -10,12 +10,22 @@ includes:
 tasks:
   default:
     desc: "Development build of {{.MODULE_NAME}}"
-    env_files:
-      - .env
+
     cmds:
       - echo "Running..."
+      - go vet ./...
+      - task: format
+      - wails dev -ldflags "-X main.version=Dev"
+
+  update:
+    cmds:
       - go get -u
       - go mod tidy
       - go mod verify
-      - go vet ./...
-      - wails dev -ldflags "-X main.version=Dev"
+      - task: default
+
+  format:
+    dir: frontend
+    cmds:
+      - npm run format
+      - npm run lint
