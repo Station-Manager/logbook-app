@@ -48,7 +48,7 @@ func (s *Service) GetDatabaseFileList() ([]string, error) {
 		if entry.IsDir() {
 			continue
 		}
-		matched, merr := filepath.Match("*.txt", entry.Name())
+		matched, merr := filepath.Match("*.db", entry.Name())
 		if merr != nil {
 			merr = errors.New(op).Err(merr)
 			s.LoggerService.ErrorWith().Err(merr).Msg("Failed to match database file.")
