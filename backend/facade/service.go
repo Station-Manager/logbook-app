@@ -11,6 +11,10 @@ import (
 	"sync/atomic"
 )
 
+const (
+	ServiceName = "logbook-app-facade"
+)
+
 type Service struct {
 	ConfigService   *config.Service  `di.inject:"configservice"`
 	LoggerService   *logging.Service `di.inject:"loggingservice"`
@@ -23,7 +27,6 @@ type Service struct {
 	mu       sync.Mutex
 
 	currentLogbook types.Logbook
-	requiredCfgs   types.RequiredConfigs
 }
 
 func (s *Service) Initialize() error {

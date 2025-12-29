@@ -1,7 +1,8 @@
 version: '3'
-dotenv: ['../.env','./env']
+dotenv: ['../.env','.env']
 vars:
   MODULE_NAME: "Logbook App"
+  EXE_NAME: "smbook"
 
 includes:
   version: ../Taskfile.version.yml

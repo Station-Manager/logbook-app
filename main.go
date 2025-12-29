@@ -39,9 +39,16 @@ func main() {
 	}
 
 	if err = initializeContainer(workingDir); err != nil {
+		errors.PrintChain(err)
 		_, _ = fmt.Fprintf(os.Stderr, "failed to initialize container: %v\n", errors.Root(err))
-		_, _ = fmt.Fprintf(os.Stderr, "container initialization failed: %s\n", err)
 		os.Exit(ExitContainerInit)
+	}
+
+	facade, err := getFacadeService()
+	if err != nil {
+		errors.PrintChain(err)
+		_, _ = fmt.Fprintf(os.Stderr, "failed to get facade service: %v\n", errors.Root(err))
+		os.Exit(ExitFacadeService)
 	}
 
 	startup := func(ctx context.Context) {
@@ -68,15 +75,17 @@ func main() {
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		Menu:                             nil,
-		Logger:                           nil,
-		LogLevel:                         logger.WARNING,
-		LogLevelProduction:               logger.ERROR,
-		OnStartup:                        startup,
-		OnDomReady:                       nil,
-		OnShutdown:                       shutdown,
-		OnBeforeClose:                    nil,
-		Bind:                             []interface{}{},
+		Menu:               nil,
+		Logger:             nil,
+		LogLevel:           logger.WARNING,
+		LogLevelProduction: logger.ERROR,
+		OnStartup:          startup,
+		OnDomReady:         nil,
+		OnShutdown:         shutdown,
+		OnBeforeClose:      nil,
+		Bind: []interface{}{
+			facade,
+		},
 		EnumBind:                         []interface{}{},
 		WindowStartState:                 options.Normal,
 		ErrorFormatter:                   nil,

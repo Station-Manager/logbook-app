@@ -1,3 +1,4 @@
+// Package facade: Logbook-App
 package facade
 
 import "github.com/Station-Manager/errors"
@@ -17,8 +18,15 @@ func (s *Service) openAndLoadFromDatabase() error {
 		return err
 	}
 
+	reqCfg, err := s.ConfigService.RequiredConfigs()
+	if err != nil {
+		err = errors.New(op).Err(err)
+		s.LoggerService.ErrorWith().Err(err).Msg("Failed to fetch required configs.")
+		return err
+	}
+
 	// Load the default logbook
-	logbook, err := s.DatabaseService.FetchLogbookByID(s.requiredCfgs.DefaultLogbookID)
+	logbook, err := s.DatabaseService.FetchLogbookByID(reqCfg.DefaultLogbookID)
 	if err != nil {
 		err = errors.New(op).Err(err)
 		s.LoggerService.ErrorWith().Err(err).Msg("Failed to fetch logbook.")
