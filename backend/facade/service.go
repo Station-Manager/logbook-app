@@ -2,21 +2,28 @@ package facade
 
 import (
 	"github.com/Station-Manager/config"
+	"github.com/Station-Manager/database/sqlite"
 	"github.com/Station-Manager/errors"
 	"github.com/Station-Manager/logging"
+	"github.com/Station-Manager/types"
+
 	"sync"
 	"sync/atomic"
 )
 
 type Service struct {
-	ConfigService *config.Service  `di.inject:"configservice"`
-	LoggerService *logging.Service `di.inject:"loggingservice"`
+	ConfigService   *config.Service  `di.inject:"configservice"`
+	LoggerService   *logging.Service `di.inject:"loggingservice"`
+	DatabaseService *sqlite.Service  `di.inject:"sqliteservice"`
 
 	initialized atomic.Bool
 	started     atomic.Bool // guarded via atomic operations; Start/Stop also hold mu for broader state
 
 	initOnce sync.Once
 	mu       sync.Mutex
+
+	currentLogbook types.Logbook
+	requiredCfgs   types.RequiredConfigs
 }
 
 func (s *Service) Initialize() error {
@@ -31,6 +38,16 @@ func (s *Service) Initialize() error {
 
 		if s.LoggerService == nil {
 			initErr = errors.New(op).Msg(errMsgNilLoggerService)
+			return
+		}
+
+		if s.DatabaseService == nil {
+			initErr = errors.New(op).Msg(errMsgNilDatabaseService)
+			return
+		}
+
+		if err := s.openAndLoadFromDatabase(); err != nil {
+			initErr = errors.New(op).Err(err)
 			return
 		}
 

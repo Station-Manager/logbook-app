@@ -1,17 +1,32 @@
+// Logbook Application
 package main
 
 import (
+	"reflect"
+	"strings"
+
+	"github.com/Station-Manager/config"
+	"github.com/Station-Manager/database/sqlite"
 	"github.com/Station-Manager/errors"
 	"github.com/Station-Manager/iocdi"
-	"strings"
+	"github.com/Station-Manager/logging"
 )
 
 func initializeContainer(workingDir string) error {
-	const op errors.Op = "logging-app.main.initializeContainer"
+	const op errors.Op = "logbook-app.main.initializeContainer"
 
 	container = iocdi.New()
 
 	if err := container.RegisterInstance("workingdir", workingDir); err != nil {
+		return errors.New(op).Err(err)
+	}
+	if err := container.Register(config.ServiceName, reflect.TypeOf((*config.Service)(nil))); err != nil {
+		return errors.New(op).Err(err)
+	}
+	if err := container.Register(logging.ServiceName, reflect.TypeOf((*logging.Service)(nil))); err != nil {
+		return errors.New(op).Err(err)
+	}
+	if err := container.Register(sqlite.ServiceName, reflect.TypeOf((*sqlite.Service)(nil))); err != nil {
 		return errors.New(op).Err(err)
 	}
 
