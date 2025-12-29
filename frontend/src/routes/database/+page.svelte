@@ -1,7 +1,5 @@
 <script lang="ts">
-
+    import DatabaseCard from "$lib/ui/database/cards/DatabaseCard.svelte";
 </script>
 
-<div>
-    Database Landing Page
-</div>
+<DatabaseCard/>

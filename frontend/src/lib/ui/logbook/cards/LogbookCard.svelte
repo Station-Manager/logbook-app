@@ -3,5 +3,5 @@
 </script>
 
 <div>
-    LogbookCard
+    Logbook Card
 </div>
