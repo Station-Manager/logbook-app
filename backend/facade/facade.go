@@ -3,6 +3,7 @@ package facade
 import (
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/Station-Manager/errors"
 	"github.com/Station-Manager/types"
@@ -55,7 +56,7 @@ func (s *Service) GetDatabaseFileList() ([]string, error) {
 			return nil, merr
 		}
 		if matched {
-			slice = append(slice, entry.Name())
+			slice = append(slice, strings.ReplaceAll(entry.Name(), ".db", ""))
 		}
 	}
 

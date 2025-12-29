@@ -7,8 +7,9 @@ export const load: PageData = async (): Promise<object> => {
     try {
         const list: string[] = await GetDatabaseFileList();
         console.log('Database file list:', list);
+        return { list: list };
     } catch (e: unknown) {
         handleAsyncError(e, 'database/+page.ts->load');
     }
-    return {};
+    return { list: null };
 };
