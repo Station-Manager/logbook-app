@@ -1,2 +1,6 @@
-<h1>Welcome to SvelteKit</h1>
+<script>
+    import LogbookCard from "$lib/ui/logbook/cards/LogbookCard.svelte";
+</script>
+
+<LogbookCard/>
 

@@ -4,6 +4,9 @@ import (
 	"context"
 	"embed"
 	"fmt"
+	"os"
+
+	"github.com/Station-Manager/errors"
 	"github.com/Station-Manager/iocdi"
 	"github.com/Station-Manager/utils"
 	"github.com/wailsapp/wails/v2"
@@ -11,7 +14,6 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
-	"os"
 )
 
 const (
@@ -31,12 +33,14 @@ var assets embed.FS
 func main() {
 	workingDir, err := utils.WorkingDir()
 	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "failed to determine working directory: %v\n", err)
+		errors.PrintChain(err)
+		_, _ = fmt.Fprintf(os.Stderr, "failed to determine working directory: %v\n", errors.Root(err))
 		os.Exit(ExitWorkingDir)
 	}
 
 	if err = initializeContainer(workingDir); err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "failed to initialize container: %v\n", err)
+		_, _ = fmt.Fprintf(os.Stderr, "failed to initialize container: %v\n", errors.Root(err))
+		_, _ = fmt.Fprintf(os.Stderr, "container initialization failed: %s\n", err)
 		os.Exit(ExitContainerInit)
 	}
 
@@ -47,7 +51,7 @@ func main() {
 	}
 
 	opts := &options.App{
-		Title:             "Logbook App", //fmt.Sprintf("%s | Logging: %s", facade.ConfigService.RequiredConfigs().AppTitle, version),
+		Title:             fmt.Sprintf("%s: %s", AppTitle, version),
 		Width:             minWidth,
 		Height:            minHeight,
 		DisableResize:     true,
@@ -112,6 +116,8 @@ func main() {
 	}
 
 	if err = wails.Run(opts); err != nil {
-		panic(err)
+		errors.PrintChain(err)
+		_, _ = fmt.Fprintf(os.Stderr, "failed to run wails: %v\n", errors.Root(err))
+		os.Exit(ExitFacadeService)
 	}
 }
