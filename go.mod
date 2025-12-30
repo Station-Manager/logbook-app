@@ -3,8 +3,8 @@ module github.com/Station-Manager/logbook-app
 go 1.25
 
 require (
-	github.com/Station-Manager/config v0.0.33
-	github.com/Station-Manager/database v0.0.48
+	github.com/Station-Manager/config v0.0.34
+	github.com/Station-Manager/database v0.0.50
 	github.com/Station-Manager/errors v0.0.11
 	github.com/Station-Manager/iocdi v0.0.1
 	github.com/Station-Manager/logging v0.0.12

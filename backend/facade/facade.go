@@ -1,10 +1,7 @@
 package facade
 
 import (
-	"os"
-	"path/filepath"
-	"strings"
-
+	"github.com/Station-Manager/database/sqlite/meta"
 	"github.com/Station-Manager/errors"
 	"github.com/Station-Manager/types"
 )
@@ -25,9 +22,7 @@ func (s *Service) FetchUiConfig() (*types.UiConfig, error) {
 	}, nil
 }
 
-// GetDatabaseFileList retrieves a list of database file paths from the configured database directory.
-// It returns an error if the service is not initialized or the file glob operation fails.
-func (s *Service) GetDatabaseFileList() ([]string, error) {
+func (s *Service) GetDatabaseMetadata() ([]meta.SqliteMeta, error) {
 	const op errors.Op = "facade.Service.GetDatabaseFileList"
 
 	if !s.initialized.Load() {
@@ -36,28 +31,55 @@ func (s *Service) GetDatabaseFileList() ([]string, error) {
 		return nil, err
 	}
 
-	dbDir := filepath.Dir(s.DatabaseService.DatabaseConfig.Path)
-	entries, err := os.ReadDir(dbDir)
-	if err != nil {
-		err = errors.New(op).Err(err)
-		s.LoggerService.ErrorWith().Err(err).Msg("Failed to read database directory.")
+	//dbDir := filepath.Dir(s.DatabaseService.DatabaseConfig.Path)
+	//
+	//metaList, err := meta.LoadSqliteDatabaseList(dbDir)
+	//if err != nil {
+	//	return nil, err
+	//}
+
+	//	fmt.Printf("Loaded metadata: %+v\n", metaList)
+
+	//entries, err := os.ReadDir(dbDir)
+	//if err != nil {
+	//	err = errors.New(op).Err(err)
+	//	s.LoggerService.ErrorWith().Err(err).Msg("Failed to read database directory.")
+	//	return nil, err
+	//}
+	//
+	//var slice []string
+	//for _, entry := range entries {
+	//	if entry.IsDir() {
+	//		continue
+	//	}
+	//	matched, merr := filepath.Match("*.db", entry.Name())
+	//	if merr != nil {
+	//		merr = errors.New(op).Err(merr)
+	//		s.LoggerService.ErrorWith().Err(merr).Msg("Failed to match database file.")
+	//		return nil, merr
+	//	}
+	//	if matched {
+	//		slice = append(slice, strings.ReplaceAll(entry.Name(), ".db", ""))
+	//	}
+	//}
+
+	return nil, nil
+}
+
+func (s *Service) GetLogbookList() ([]types.Logbook, error) {
+	const op errors.Op = "facade.Service.GetLogbookList"
+
+	if !s.initialized.Load() {
+		err := errors.New(op).Msg(errMsgServiceNotInit)
+		s.LoggerService.ErrorWith().Err(err).Msg(errMsgServiceNotInit)
 		return nil, err
 	}
 
-	var slice []string
-	for _, entry := range entries {
-		if entry.IsDir() {
-			continue
-		}
-		matched, merr := filepath.Match("*.db", entry.Name())
-		if merr != nil {
-			merr = errors.New(op).Err(merr)
-			s.LoggerService.ErrorWith().Err(merr).Msg("Failed to match database file.")
-			return nil, merr
-		}
-		if matched {
-			slice = append(slice, strings.ReplaceAll(entry.Name(), ".db", ""))
-		}
+	slice, err := s.DatabaseService.FetchAllLogbooks()
+	if err != nil {
+		err = errors.New(op).Err(err)
+		s.LoggerService.ErrorWith().Err(err).Msg("Failed to fetch logbook list.")
+		return nil, err
 	}
 
 	return slice, nil

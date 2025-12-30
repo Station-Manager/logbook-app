@@ -1,11 +1,12 @@
 import type { PageData } from './$types';
-import { GetDatabaseFileList } from '$lib/wailsjs/go/facade/Service';
+import { GetLogbookList } from '$lib/wailsjs/go/facade/Service';
 import { handleAsyncError } from '$lib/utils/error-handler';
+import { types } from '$lib/wailsjs/go/models';
 
 export const load: PageData = async (): Promise<object> => {
     console.log('load called');
     try {
-        const list: string[] = await GetDatabaseFileList();
+        const list: types.Logbook[] = await GetLogbookList();
         console.log('Database file list:', list);
         return { list: list };
     } catch (e: unknown) {
