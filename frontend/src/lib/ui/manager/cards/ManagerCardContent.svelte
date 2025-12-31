@@ -11,20 +11,27 @@
     let nameInput: HTMLInputElement;
     let callsignInput: HTMLInputElement;
     let descriptionInput: HTMLTextAreaElement;
+    let submitButton: HTMLButtonElement;
 
     let {
         logbookList = [],
     }: Props = $props();
     let inputDisabled: boolean = $state(true);
+    let actionLabel: string = $state("Update");
 
     const newLogbookAction = (): void => {
         logbookState.clear();
         inputDisabled = false;
+        actionLabel = "Create";
         nameInput.focus();
     }
 
     const loadLogbookAction = (id: number): void => {
-        console.log("Load logbook action", id);
+        actionLabel = "Update";
+        const lb = logbookList.find((lb) => lb.id === id);
+        if (!lb) return;
+        console.log("Load logbook action lb", lb);
+        logbookState.fromLogbook(lb);
     }
 
     onMount((): void => {
@@ -38,7 +45,7 @@
             <span class="font-semibold">New Log Book</span>
         </button>
         {#each logbookList as lb (lb.id)}
-        <button disabled={lb.id === configState.logbook.id} onclick={() => loadLogbookAction(lb.id)} class="flex flex-col border border-gray-300 p-4 rounded-md text-left hover:border-gray-400 hover:cursor-pointer disabled:hover:border-gray-300 disabled:cursor-not-allowed">
+        <button onclick={() => loadLogbookAction(lb.id)} class="flex flex-col border border-gray-300 p-4 rounded-md text-left hover:border-gray-400 hover:cursor-pointer disabled:hover:border-gray-300 disabled:cursor-not-allowed">
             <span class="font-semibold">{lb.name}</span>
             <span class="text-sm text-gray-400">{lb.description}</span>
         </button>
@@ -93,11 +100,17 @@
         </div>
         <div class="flex justify-between mt-4">
             <div>
-            <button class="rounded-md bg-red-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">Delete</button>
+                <button
+                        disabled={logbookState.id === 0 || logbookState.id === configState.logbook.id}
+                        class="rounded-md bg-red-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:bg-gray-400">Delete</button>
             </div>
             <div class="flex gap-x-4">
-            <button class="rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Select</button>
-            <button class="rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Update</button>
+            <button
+                    disabled={logbookState.id === 0 || logbookState.id === configState.logbook.id}
+                    class="rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-400">Select</button>
+            <button class="rounded-md bg-indigo-600 w-[76px] py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                {actionLabel}
+            </button>
             <button class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50">Cancel</button>
             </div>
         </div>

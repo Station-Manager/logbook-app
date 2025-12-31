@@ -26,7 +26,6 @@ export const logbookState: LogbookState = $state({
         this.name = lb.name;
         this.callsign = lb.callsign;
         this.description = lb.description ?? '';
-        console.log(lb);
     },
     toLogbook(this: LogbookState): types.Logbook {
         const base = new types.Logbook();
