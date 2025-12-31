@@ -3,15 +3,19 @@
     import {configState} from "$lib/states/config-state.svelte";
     import {onMount} from "svelte";
     import {logbookState} from "$lib/states/logbook-state.svelte";
+    import {NewLogbook} from "$lib/wailsjs/go/facade/Service";
+    import {handleAsyncError} from "$lib/utils/error-handler";
+    import {showToast} from "$lib/utils/toast";
 
     interface Props {
         logbookList: types.Logbook[];
     }
 
+    let nameInputDiv: HTMLDivElement;
     let nameInput: HTMLInputElement;
+    let callsignInputDiv: HTMLDivElement;
     let callsignInput: HTMLInputElement;
     let descriptionInput: HTMLTextAreaElement;
-    let submitButton: HTMLButtonElement;
 
     let {
         logbookList = [],
@@ -23,7 +27,6 @@
         logbookState.clear();
         inputDisabled = false;
         actionLabel = "Create";
-        nameInput.focus();
     }
 
     const loadLogbookAction = (id: number): void => {
@@ -32,6 +35,39 @@
         if (!lb) return;
         console.log("Load logbook action lb", lb);
         logbookState.fromLogbook(lb);
+    }
+
+    const submitLogbookAction = (): void => {
+        if (logbookState.name.trim().length === 0) {
+            nameInputDiv.classList.remove("focus-within:outline-indigo-600");
+            nameInputDiv.classList.add("focus-within:outline-red-600");
+            nameInput.focus();
+            return;
+        }
+        if (logbookState.callsign.trim().length < 3) {
+            callsignInputDiv.classList.remove("focus-within:outline-indigo-600");
+            callsignInputDiv.classList.add("focus-within:outline-red-600");
+            callsignInput.focus();
+            return;
+        }
+        const lb = logbookState.toLogbook();
+        createNewLogbook(lb);
+    }
+
+    const cancelLogbookAction = (): void => {
+        logbookState.clear();
+        inputDisabled = true;
+        actionLabel = "Update";
+        logbookState.fromLogbook(configState.logbook);
+    }
+
+    const createNewLogbook = async (lb: types.Logbook): Promise<void> => {
+        try {
+            await NewLogbook(lb);
+            showToast.INFO("New Logbook created...");
+        } catch (e: unknown) {
+            handleAsyncError(e, 'ManagerCardContent.svelte->createNewLogbook()');
+        }
     }
 
     onMount((): void => {
@@ -57,11 +93,14 @@
                 <div>
                     <label for="name" class="block text-sm/6 font-medium text-gray-900 dark:text-white">Name</label>
                     <div class="mt-2">
-                        <div class="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                        <div
+                                bind:this={nameInputDiv}
+                                class="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
                             <input
                                     bind:this={nameInput}
                                     bind:value={logbookState.name}
                                     disabled={inputDisabled}
+                                    required
                                     id="name"
                                     type="text"
                                     placeholder="Log book name"
@@ -72,7 +111,9 @@
                 <div>
                     <label for="callsign" class="block text-sm/6 font-medium text-gray-900 dark:text-white">Callsign</label>
                     <div class="mt-2">
-                        <div class="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600 dark:bg-white/5 dark:outline-white/10 dark:focus-within:outline-indigo-500">
+                        <div
+                                bind:this={callsignInputDiv}
+                                class="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600 dark:bg-white/5 dark:outline-white/10 dark:focus-within:outline-indigo-500">
                             <input
                                     bind:this={callsignInput}
                                     bind:value={logbookState.callsign}
@@ -80,7 +121,7 @@
                                     id="callsign"
                                     type="text"
                                     placeholder="Callsign"
-                                    class="block bg-white py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none"/>
+                                    class="uppercase block bg-white py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none"/>
                         </div>
                     </div>
                 </div>
@@ -108,10 +149,14 @@
             <button
                     disabled={logbookState.id === 0 || logbookState.id === configState.logbook.id}
                     class="rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-400">Select</button>
-            <button class="rounded-md bg-indigo-600 w-[76px] py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            <button
+                    onclick={submitLogbookAction}
+                    class="rounded-md bg-indigo-600 w-[76px] py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
                 {actionLabel}
             </button>
-            <button class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50">Cancel</button>
+            <button
+                    onclick={cancelLogbookAction}
+                    class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 cursor-pointer">Cancel</button>
             </div>
         </div>
     </div>

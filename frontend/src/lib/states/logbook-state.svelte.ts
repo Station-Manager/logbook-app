@@ -31,7 +31,7 @@ export const logbookState: LogbookState = $state({
         const base = new types.Logbook();
         base.id = this.id;
         base.name = this.name;
-        base.callsign = this.callsign;
+        base.callsign = this.callsign.toUpperCase();
         base.description = this.description;
         return base;
     },

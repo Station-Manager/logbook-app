@@ -84,3 +84,24 @@ func (s *Service) GetLogbookList() ([]types.Logbook, error) {
 
 	return slice, nil
 }
+
+func (s *Service) NewLogbook(logbook types.Logbook) error {
+	const op errors.Op = "facade.Service.NewLogbook"
+
+	if !s.initialized.Load() {
+		err := errors.New(op).Msg(errMsgServiceNotInit)
+		s.LoggerService.ErrorWith().Err(err).Msg(errMsgServiceNotInit)
+		return err
+	}
+
+	id, err := s.DatabaseService.InsertLogbook(logbook)
+	if err != nil {
+		err = errors.New(op).Err(err)
+		s.LoggerService.ErrorWith().Err(err).Msgf("Failed to insert logbook: %+v", logbook)
+		return err
+	}
+
+	logbook.ID = id
+
+	return nil
+}
