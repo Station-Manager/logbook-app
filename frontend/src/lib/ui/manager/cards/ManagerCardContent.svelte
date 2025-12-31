@@ -3,13 +3,10 @@
     import {configState} from "$lib/states/config-state.svelte";
     import {onMount} from "svelte";
     import {logbookState} from "$lib/states/logbook-state.svelte";
-    import {NewLogbook} from "$lib/wailsjs/go/facade/Service";
+    import {GetLogbookList, NewLogbook} from "$lib/wailsjs/go/facade/Service";
     import {handleAsyncError} from "$lib/utils/error-handler";
     import {showToast} from "$lib/utils/toast";
-
-    interface Props {
-        logbookList: types.Logbook[];
-    }
+    import {logbookListState} from "$lib/states/logbook-list-state.svelte";
 
     let nameInputDiv: HTMLDivElement;
     let nameInput: HTMLInputElement;
@@ -17,9 +14,6 @@
     let callsignInput: HTMLInputElement;
     let descriptionInput: HTMLTextAreaElement;
 
-    let {
-        logbookList = [],
-    }: Props = $props();
     let inputDisabled: boolean = $state(true);
     let actionLabel: string = $state("Update");
 
@@ -31,7 +25,7 @@
 
     const loadLogbookAction = (id: number): void => {
         actionLabel = "Update";
-        const lb = logbookList.find((lb) => lb.id === id);
+        const lb = logbookListState.list.find((lb) => lb.id === id);
         if (!lb) return;
         console.log("Load logbook action lb", lb);
         logbookState.fromLogbook(lb);
@@ -64,6 +58,7 @@
     const createNewLogbook = async (lb: types.Logbook): Promise<void> => {
         try {
             await NewLogbook(lb);
+            logbookListState.list = await GetLogbookList();
             showToast.INFO("New Logbook created...");
         } catch (e: unknown) {
             handleAsyncError(e, 'ManagerCardContent.svelte->createNewLogbook()');
@@ -80,7 +75,7 @@
         <button onclick={newLogbookAction} class="flex flex-col border border-gray-300 p-4 rounded-md hover:border-gray-400 hover:cursor-pointer">
             <span class="font-semibold">New Log Book</span>
         </button>
-        {#each logbookList as lb (lb.id)}
+        {#each logbookListState.list as lb (lb.id)}
         <button onclick={() => loadLogbookAction(lb.id)} class="flex flex-col border border-gray-300 p-4 rounded-md text-left hover:border-gray-400 hover:cursor-pointer disabled:hover:border-gray-300 disabled:cursor-not-allowed">
             <span class="font-semibold">{lb.name}</span>
             <span class="text-sm text-gray-400">{lb.description}</span>
