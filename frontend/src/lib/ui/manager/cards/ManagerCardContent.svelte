@@ -8,6 +8,14 @@
     import {showToast} from "$lib/utils/toast";
     import {logbookListState} from "$lib/states/logbook-list-state.svelte";
 
+    const Action = {
+        CREATE: "Create",
+        UPDATE: "Update",
+        DELETE: "Delete"
+    } as const;
+
+    type Action = typeof Action[keyof typeof Action];
+
     let nameInputDiv: HTMLDivElement;
     let nameInput: HTMLInputElement;
     let callsignInputDiv: HTMLDivElement;
@@ -15,23 +23,22 @@
     let descriptionInput: HTMLTextAreaElement;
 
     let inputDisabled: boolean = $state(true);
-    let actionLabel: string = $state("Update");
+    let currentAction: Action = $state(Action.UPDATE);
 
     const newLogbookAction = (): void => {
         logbookState.clear();
         inputDisabled = false;
-        actionLabel = "Create";
+        currentAction = Action.CREATE;
     }
 
     const loadLogbookAction = (id: number): void => {
-        actionLabel = "Update";
+        currentAction = Action.UPDATE;
         const lb = logbookListState.list.find((lb) => lb.id === id);
         if (!lb) return;
-        console.log("Load logbook action lb", lb);
         logbookState.fromLogbook(lb);
     }
 
-    const submitLogbookAction = (): void => {
+    const submitLogbookAction = (a: Action): void => {
         if (logbookState.name.trim().length === 0) {
             nameInputDiv.classList.remove("focus-within:outline-indigo-600");
             nameInputDiv.classList.add("focus-within:outline-red-600");
@@ -44,14 +51,29 @@
             callsignInput.focus();
             return;
         }
-        const lb = logbookState.toLogbook();
-        createNewLogbook(lb);
+
+        switch (a) {
+            case Action.CREATE: {
+                const lb = logbookState.toLogbook();
+                createNewLogbook(lb);
+                break;
+            }
+            case Action.UPDATE: {
+                break;
+            }
+            case Action.DELETE: {
+                deleteLogbook(logbookState.id);
+                break;
+            }
+            default:
+                break;
+        }
     }
 
     const cancelLogbookAction = (): void => {
         logbookState.clear();
         inputDisabled = true;
-        actionLabel = "Update";
+        currentAction = Action.UPDATE;
         logbookState.fromLogbook(configState.logbook);
     }
 
@@ -62,6 +84,15 @@
             showToast.INFO("New Logbook created...");
         } catch (e: unknown) {
             handleAsyncError(e, 'ManagerCardContent.svelte->createNewLogbook()');
+        }
+    }
+
+    const deleteLogbook = async (id: number): Promise<void> => {
+        try {
+            console.log(`Deleting logbook with id ${id}`);
+            showToast.INFO("Logbook deleted...");
+        } catch (e: unknown) {
+            handleAsyncError(e, 'ManagerCardContent.svelte->deleteLogbook()');
         }
     }
 
@@ -137,17 +168,18 @@
         <div class="flex justify-between mt-4">
             <div>
                 <button
+                        onclick={() => submitLogbookAction(Action.DELETE)}
                         disabled={logbookState.id === 0 || logbookState.id === configState.logbook.id}
-                        class="rounded-md bg-red-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:bg-gray-400">Delete</button>
+                        class="rounded-md bg-red-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:bg-gray-400 cursor-pointer">Delete</button>
             </div>
             <div class="flex gap-x-4">
             <button
                     disabled={logbookState.id === 0 || logbookState.id === configState.logbook.id}
                     class="rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-400">Select</button>
             <button
-                    onclick={submitLogbookAction}
+                    onclick={() => submitLogbookAction(currentAction)}
                     class="rounded-md bg-indigo-600 w-[76px] py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
-                {actionLabel}
+                {currentAction}
             </button>
             <button
                     onclick={cancelLogbookAction}
