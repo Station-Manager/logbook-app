@@ -105,3 +105,37 @@ func (s *Service) NewLogbook(logbook types.Logbook) error {
 
 	return nil
 }
+
+func (s *Service) UpdateLogbook(logbook types.Logbook) error {
+	return nil
+}
+
+func (s *Service) DeleteLogbook(id int64) error {
+	const op errors.Op = "facade.Service.DeleteLogbook"
+
+	if !s.initialized.Load() {
+		err := errors.New(op).Msg(errMsgServiceNotInit)
+		s.LoggerService.ErrorWith().Err(err).Msg(errMsgServiceNotInit)
+		return err
+	}
+
+	logbook, err := s.DatabaseService.FetchLogbookByID(id)
+	if err != nil {
+		err = errors.New(op).Err(err)
+		s.LoggerService.ErrorWith().Err(err).Msgf("Failed to fetch logbook with id: %d", id)
+		return err
+	}
+
+	qsoSlice, err := s.DatabaseService.FetchQsoSliceByLogbookId(logbook.ID)
+	if err != nil {
+		err = errors.New(op).Err(err)
+		s.LoggerService.ErrorWith().Err(err).Msgf("Failed to fetch QSO count for logbook with id: %d", logbook.ID)
+		return err
+	}
+
+	if len(qsoSlice) > 0 {
+		return errors.New(op).Msgf("Logbook with id: %d has QSOs. Cannot delete.", logbook.ID)
+	}
+
+	return nil
+}

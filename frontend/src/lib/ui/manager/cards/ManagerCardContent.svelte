@@ -3,7 +3,7 @@
     import {configState} from "$lib/states/config-state.svelte";
     import {onMount} from "svelte";
     import {logbookState} from "$lib/states/logbook-state.svelte";
-    import {GetLogbookList, NewLogbook} from "$lib/wailsjs/go/facade/Service";
+    import {DeleteLogbook, GetLogbookList, NewLogbook} from "$lib/wailsjs/go/facade/Service";
     import {handleAsyncError} from "$lib/utils/error-handler";
     import {showToast} from "$lib/utils/toast";
     import {logbookListState} from "$lib/states/logbook-list-state.svelte";
@@ -89,8 +89,9 @@
 
     const deleteLogbook = async (id: number): Promise<void> => {
         try {
-            console.log(`Deleting logbook with id ${id}`);
+            await DeleteLogbook(id);
             showToast.INFO("Logbook deleted...");
+            logbookListState.list = await GetLogbookList();
         } catch (e: unknown) {
             handleAsyncError(e, 'ManagerCardContent.svelte->deleteLogbook()');
         }
