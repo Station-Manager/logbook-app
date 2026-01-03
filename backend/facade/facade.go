@@ -119,22 +119,10 @@ func (s *Service) DeleteLogbook(id int64) error {
 		return err
 	}
 
-	logbook, err := s.DatabaseService.FetchLogbookByID(id)
-	if err != nil {
+	if err := s.DatabaseService.DeleteLogbookByID(id); err != nil {
 		err = errors.New(op).Err(err)
-		s.LoggerService.ErrorWith().Err(err).Msgf("Failed to fetch logbook with id: %d", id)
+		s.LoggerService.ErrorWith().Err(err).Msgf("Failed to delete logbook with id: %d", id)
 		return err
-	}
-
-	qsoSlice, err := s.DatabaseService.FetchQsoSliceByLogbookId(logbook.ID)
-	if err != nil {
-		err = errors.New(op).Err(err)
-		s.LoggerService.ErrorWith().Err(err).Msgf("Failed to fetch QSO count for logbook with id: %d", logbook.ID)
-		return err
-	}
-
-	if len(qsoSlice) > 0 {
-		return errors.New(op).Msgf("Logbook with id: %d has QSOs. Cannot delete.", logbook.ID)
 	}
 
 	return nil

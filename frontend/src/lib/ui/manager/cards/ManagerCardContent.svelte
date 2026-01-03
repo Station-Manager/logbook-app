@@ -51,7 +51,10 @@
             callsignInput.focus();
             return;
         }
-
+        if (logbookState.id === 1) {
+            showToast.ERROR("You cannot delete the default logbook.");
+            return;
+        }
         switch (a) {
             case Action.CREATE: {
                 const lb = logbookState.toLogbook();
@@ -92,6 +95,7 @@
             await DeleteLogbook(id);
             showToast.INFO("Logbook deleted...");
             logbookListState.list = await GetLogbookList();
+            logbookState.fromLogbook(configState.logbook);
         } catch (e: unknown) {
             handleAsyncError(e, 'ManagerCardContent.svelte->deleteLogbook()');
         }
@@ -108,7 +112,9 @@
             <span class="font-semibold">New Log Book</span>
         </button>
         {#each logbookListState.list as lb (lb.id)}
-        <button onclick={() => loadLogbookAction(lb.id)} class="flex flex-col border border-gray-300 p-4 rounded-md text-left hover:border-gray-400 hover:cursor-pointer disabled:hover:border-gray-300 disabled:cursor-not-allowed">
+        <button
+                onclick={() => loadLogbookAction(lb.id)}
+                class="flex flex-col border border-gray-300 p-4 rounded-md text-left hover:border-gray-400 hover:cursor-pointer disabled:hover:border-gray-300 disabled:cursor-not-allowed">
             <span class="font-semibold">{lb.name}</span>
             <span class="text-sm text-gray-400">{lb.description}</span>
         </button>
@@ -171,7 +177,7 @@
                 <button
                         onclick={() => submitLogbookAction(Action.DELETE)}
                         disabled={logbookState.id === 0 || logbookState.id === configState.logbook.id}
-                        class="rounded-md bg-red-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:bg-gray-400 cursor-pointer">Delete</button>
+                        class="rounded-md bg-red-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed">Delete</button>
             </div>
             <div class="flex gap-x-4">
             <button
