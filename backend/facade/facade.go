@@ -127,3 +127,36 @@ func (s *Service) DeleteLogbook(id int64) error {
 
 	return nil
 }
+
+func (s *Service) SetCurrentLogbook(id int64) error {
+	return nil
+}
+
+func (s *Service) GetQsoSlice(logbookId int64, pageNum int, pageSize int) ([]types.Qso, error) {
+	const op errors.Op = "facade.Service.GetQsoSlice"
+
+	if !s.initialized.Load() {
+		err := errors.New(op).Msg(errMsgServiceNotInit)
+		s.LoggerService.ErrorWith().Err(err).Msg(errMsgServiceNotInit)
+		return nil, err
+	}
+
+	if logbookId < 1 {
+		return nil, errors.New(op).Msg("Logbook ID must be greater than 0")
+	}
+	if pageNum < 1 {
+		return nil, errors.New(op).Msg("Page number must be greater than 0")
+	}
+	if pageSize < 1 {
+		return nil, errors.New(op).Msg("Page size must be greater than 0")
+	}
+
+	slice, err := s.DatabaseService.FetchQsoSlicePaging(logbookId, pageNum, pageSize)
+	if err != nil {
+		err = errors.New(op).Err(err)
+		s.LoggerService.ErrorWith().Err(err).Msgf("Failed to fetch QSO slice for logbook ID: %d", logbookId)
+		return nil, err
+	}
+
+	return slice, nil
+}

@@ -27,6 +27,7 @@ type Service struct {
 	mu       sync.Mutex
 
 	currentLogbook types.Logbook
+	requiredCfgs   *types.RequiredConfigs
 }
 
 func (s *Service) Initialize() error {
@@ -49,7 +50,14 @@ func (s *Service) Initialize() error {
 			return
 		}
 
-		if err := s.openAndLoadFromDatabase(); err != nil {
+		reqCfg, err := s.ConfigService.RequiredConfigs()
+		if err != nil {
+			initErr = errors.New(op).Err(err)
+			return
+		}
+		s.requiredCfgs = &reqCfg
+
+		if err = s.openAndLoadFromDatabase(); err != nil {
 			initErr = errors.New(op).Err(err)
 			return
 		}

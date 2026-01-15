@@ -3,13 +3,13 @@ module github.com/Station-Manager/logbook-app
 go 1.25
 
 require (
-	github.com/Station-Manager/config v0.0.34
-	github.com/Station-Manager/database v0.0.52
+	github.com/Station-Manager/config v0.0.39
+	github.com/Station-Manager/database v0.0.56
 	github.com/Station-Manager/errors v0.0.11
 	github.com/Station-Manager/iocdi v0.0.1
 	github.com/Station-Manager/logging v0.0.12
-	github.com/Station-Manager/types v0.0.70
-	github.com/Station-Manager/utils v0.0.4
+	github.com/Station-Manager/types v0.0.75
+	github.com/Station-Manager/utils v0.0.5
 	github.com/wailsapp/wails/v2 v2.11.0
 )
 
@@ -64,15 +64,15 @@ require (
 	github.com/wailsapp/mimetype v1.4.1 // indirect
 	go.bug.st/serial v1.6.4 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
-	golang.org/x/crypto v0.46.0 // indirect
-	golang.org/x/exp v0.0.0-20251219203646-944ab1f22d93 // indirect
-	golang.org/x/net v0.48.0 // indirect
-	golang.org/x/sys v0.39.0 // indirect
-	golang.org/x/text v0.32.0 // indirect
+	golang.org/x/crypto v0.47.0 // indirect
+	golang.org/x/exp v0.0.0-20260112195511-716be5621a96 // indirect
+	golang.org/x/net v0.49.0 // indirect
+	golang.org/x/sys v0.40.0 // indirect
+	golang.org/x/text v0.33.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	modernc.org/libc v1.67.4 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.11.0 // indirect
-	modernc.org/sqlite v1.42.2 // indirect
+	modernc.org/sqlite v1.44.0 // indirect
 )
