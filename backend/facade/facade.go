@@ -1,6 +1,8 @@
 package facade
 
 import (
+	"fmt"
+
 	"github.com/Station-Manager/database/sqlite/meta"
 	"github.com/Station-Manager/errors"
 	"github.com/Station-Manager/types"
@@ -155,7 +157,12 @@ func (s *Service) GetQsoSlice(logbookId int64, pageNum int, pageSize int) ([]typ
 	if err != nil {
 		err = errors.New(op).Err(err)
 		s.LoggerService.ErrorWith().Err(err).Msgf("Failed to fetch QSO slice for logbook ID: %d", logbookId)
-		return nil, err
+		return types.QsoSlice{}, err
+	}
+
+	if len(slice) == 0 {
+		fmt.Println("No QSOs found for logbook ID: ", logbookId)
+		return types.QsoSlice{}, nil
 	}
 
 	return slice, nil
