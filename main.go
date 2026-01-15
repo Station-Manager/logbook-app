@@ -5,6 +5,7 @@ import (
 	"embed"
 	"fmt"
 	"os"
+	"runtime/debug"
 
 	"github.com/Station-Manager/errors"
 	"github.com/Station-Manager/iocdi"
@@ -31,6 +32,14 @@ var container *iocdi.Container
 var assets embed.FS
 
 func main() {
+	defer func() {
+		if r := recover(); r != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "PANIC in main: %v\n", r)
+			_, _ = fmt.Fprintf(os.Stderr, "Stack trace:\n%s\n", debug.Stack())
+			os.Exit(ExitPanic)
+		}
+	}()
+
 	workingDir, err := utils.WorkingDir()
 	if err != nil {
 		errors.PrintChain(err)
@@ -127,6 +136,6 @@ func main() {
 	if err = wails.Run(opts); err != nil {
 		errors.PrintChain(err)
 		_, _ = fmt.Fprintf(os.Stderr, "failed to run wails: %v\n", errors.Root(err))
-		os.Exit(ExitFacadeService)
+		os.Exit(ExitWailsRun)
 	}
 }
