@@ -8,7 +8,7 @@ require (
 	github.com/Station-Manager/errors v0.0.11
 	github.com/Station-Manager/iocdi v0.0.1
 	github.com/Station-Manager/logging v0.0.12
-	github.com/Station-Manager/types v0.0.75
+	github.com/Station-Manager/types v0.0.76
 	github.com/Station-Manager/utils v0.0.5
 	github.com/wailsapp/wails/v2 v2.11.0
 )

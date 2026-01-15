@@ -20,7 +20,8 @@ func (s *Service) FetchUiConfig() (*types.UiConfig, error) {
 	}
 
 	return &types.UiConfig{
-		Logbook: s.currentLogbook,
+		Logbook:            s.currentLogbook,
+		PaginationPageSize: s.requiredCfgs.PagingationPageSize,
 	}, nil
 }
 

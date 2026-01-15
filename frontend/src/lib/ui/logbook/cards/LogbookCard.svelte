@@ -3,6 +3,7 @@
     import {onMount} from "svelte";
     import {types} from "$lib/wailsjs/go/models";
     import {GetQsoSlice} from "$lib/wailsjs/go/facade/Service";
+    import {formatDate} from "../../../../../../../shared-utils/src";
 
     let pageNum = 1;
     let tableRows: types.Qso[] = $state<types.Qso[]>([]);
@@ -20,6 +21,14 @@
     });
 </script>
 
-<div>
+<div class="">
     Logbook Card {tableRows.length}
+    <div role="table">
+        {#each tableRows as qso, index (qso.id)}
+            <div id="row-{index}" role="row" class="flex flex-row">
+                <div>{formatDate(qso.qso_date)}</div>
+                <div>{qso.freq}</div>
+            </div>
+        {/each}
+    </div>
 </div>

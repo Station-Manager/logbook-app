@@ -12,8 +12,8 @@ github.com/Station-Manager/iocdi v0.0.1 h1:b3IcTZ0xSI+CKlUhWbVClBhkS5roFzNjHvwv3
 github.com/Station-Manager/iocdi v0.0.1/go.mod h1:N2zO4mf6PLkiEg4Us1X9Mj+qKasiQFjpcwJiizUIdwM=
 github.com/Station-Manager/logging v0.0.12 h1:ETA9Vgydx8XwyjR9DnzSKqek0OqpAwnHOMsWsSs5Jso=
 github.com/Station-Manager/logging v0.0.12/go.mod h1:G7PSDZaNs1uPQ98UEXE9B+fujnNgDHWQxo+3XDunm3s=
-github.com/Station-Manager/types v0.0.75 h1:RVYKWKl56ZBAupOtm61NFDfSG1LlYoXQKlCeCaGdk5k=
-github.com/Station-Manager/types v0.0.75/go.mod h1:rPsk1kFeotvm9005E5CBnGwXrxzMdiPWkkwVco4T1+Q=
+github.com/Station-Manager/types v0.0.76 h1:o9Pi++MORFwzt18mKebOdxBy0mF5vnR+U+R5V3Ulvgg=
+github.com/Station-Manager/types v0.0.76/go.mod h1:rPsk1kFeotvm9005E5CBnGwXrxzMdiPWkkwVco4T1+Q=
 github.com/Station-Manager/utils v0.0.5 h1:zrKXZlG03ApJXbJ1ui+PVj0j48izD4edhZtXmqFcwaU=
 github.com/Station-Manager/utils v0.0.5/go.mod h1:EnFoj5YpCZntfBjfSiVaLuh21wQStGoHGcFMJBWorsI=
 github.com/aarondl/inflect v0.0.2 h1:XvH8K5g1wKS921tMmDOUsZ3zS1Eo8WwK5RHC0IGGT2s=
