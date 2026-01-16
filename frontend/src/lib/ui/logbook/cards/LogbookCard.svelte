@@ -3,7 +3,7 @@
     import {onMount} from "svelte";
     import {types} from "$lib/wailsjs/go/models";
     import {GetQsoSlice} from "$lib/wailsjs/go/facade/Service";
-    import {formatDate} from "../../../../../../../shared-utils/src";
+    import {formatDate} from "@station-manager/shared-utils";
 
     let pageNum = 1;
     let tableRows: types.Qso[] = $state<types.Qso[]>([]);
@@ -27,7 +27,10 @@
         {#each tableRows as qso, index (qso.id)}
             <div id="row-{index}" role="row" class="flex flex-row">
                 <div>{formatDate(qso.qso_date)}</div>
+                <div>{qso.band}</div>
                 <div>{qso.freq}</div>
+                <div>{qso.submode}</div>
+                <div>{qso.notes}</div>
             </div>
         {/each}
     </div>
