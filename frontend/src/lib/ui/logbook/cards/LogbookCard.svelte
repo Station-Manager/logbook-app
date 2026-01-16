@@ -3,7 +3,7 @@
     import {onMount} from "svelte";
     import {types} from "$lib/wailsjs/go/models";
     import {GetQsoSlice} from "$lib/wailsjs/go/facade/Service";
-    import {formatCatKHzToDottedMHz, formatDate, parseDatabaseFreqToDottedKhz} from "@station-manager/shared-utils";
+    import {formatDate, parseDatabaseFreqToDottedKhz} from "@station-manager/shared-utils";
 
     let pageNum = 1;
     let tableRows: types.Qso[] = $state<types.Qso[]>([]);
