@@ -34,7 +34,8 @@
         "vite": "^7.2.2"
     },
     "dependencies": {
+        "@station-manager/shared-utils": "file:../../shared-utils",
         "@zerodevx/svelte-toast": "^0.9.6",
-        "@station-manager/shared-utils": "file:../../shared-utils"
+        "bits-ui": "^2.15.4"
     }
 }

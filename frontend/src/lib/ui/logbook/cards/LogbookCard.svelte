@@ -4,9 +4,12 @@
     import {types} from "$lib/wailsjs/go/models";
     import {GetQsoSlice} from "$lib/wailsjs/go/facade/Service";
     import {formatDate, parseDatabaseFreqToDottedKhz} from "@station-manager/shared-utils";
+    import {Checkbox} from "bits-ui";
 
     let pageNum = 1;
     let tableRows: types.Qso[] = $state<types.Qso[]>([]);
+    let selections: number[] = $state([]);
+//    let allSelected = $state(false);
 
     const fetchPagedQsos = async (pageNum: number): Promise<void> => {
         try {
@@ -15,6 +18,20 @@
             handleAsyncError(e, 'LogbookCard.svelte->fetchPagedQsos()');
         }
     }
+
+    const select = (rowId: number): void => {
+        if (!selections.includes(rowId)) {
+            selections.push(rowId)
+//            allSelected = selections.length >= tableRows.length;
+        }
+//        menuClose();
+    };
+
+    const deselect = (rowId: number): void => {
+        selections = selections.filter(id => id !== rowId);
+//        allSelected = selections.length >= tableRows.length;
+        // menuClose();
+    };
 
     onMount(() => {
         fetchPagedQsos(pageNum);
@@ -26,6 +43,17 @@
     <div role="table">
         {#each tableRows as qso, index (qso.id)}
             <div id="row-{index}" role="row" class="flex flex-row">
+                <Checkbox.Root
+                        checked={selections.includes(qso.id)} onCheckedChange={(v) => {if (v) {select(qso.id);} else {deselect(qso.id);}}}
+                        class="ring rounded mt-1 mx-2 ring-gray-400 w-4 h-4">
+                    {#snippet children({checked})}
+                        {#if checked}
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 text-white bg-indigo-500">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                            </svg>
+                        {/if}
+                    {/snippet}
+                </Checkbox.Root>
                 <div class="w-28">{formatDate(qso.qso_date)}</div>
                 <div class="w-32">{qso.call}</div>
                 <div class="w-14">{qso.band}</div>
