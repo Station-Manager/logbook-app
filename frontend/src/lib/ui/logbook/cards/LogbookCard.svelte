@@ -9,7 +9,7 @@
     let pageNum = 1;
     let tableRows: types.Qso[] = $state<types.Qso[]>([]);
     let selections: number[] = $state([]);
-//    let allSelected = $state(false);
+    let allSelected = $state(false);
 
     const fetchPagedQsos = async (pageNum: number): Promise<void> => {
         try {
@@ -22,15 +22,26 @@
     const select = (rowId: number): void => {
         if (!selections.includes(rowId)) {
             selections.push(rowId)
-//            allSelected = selections.length >= tableRows.length;
+            allSelected = selections.length >= tableRows.length;
         }
 //        menuClose();
     };
 
     const deselect = (rowId: number): void => {
         selections = selections.filter(id => id !== rowId);
-//        allSelected = selections.length >= tableRows.length;
+        allSelected = selections.length >= tableRows.length;
         // menuClose();
+    };
+
+    const toggleAll = (v: boolean) => {
+        allSelected = v;
+        if (v) {
+            for (let row of tableRows) {
+                select(row.id);
+            }
+        } else {
+            selections = [];
+        }
     };
 
     onMount(() => {
@@ -40,6 +51,25 @@
 
 <div class="">
     Logbook Card {tableRows.length}
+    <div role="row" class="flex flex-row font-bold border-b mb-[3px] border-gray-400">
+        <div class="w-8">
+            <Checkbox.Root bind:checked={allSelected} onCheckedChange={(v) => {toggleAll(v);}} class="ring w-4 h-4 mx-2 rounded ring-gray-400">
+                {#snippet children({checked})}
+                    {#if checked}
+                        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 text-white bg-indigo-500">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                        </svg>
+                    {/if}
+                {/snippet}
+            </Checkbox.Root>
+        </div>
+        <div class="w-28">Date</div>
+        <div class="w-32">Call</div>
+        <div class="w-14">Band</div>
+        <div class="w-28">Frequency</div>
+        <div class="w-12">Mode</div>
+        <div>Notes</div>
+    </div>
     <div role="table">
         {#each tableRows as qso, index (qso.id)}
             <div id="row-{index}" role="row" class="flex flex-row">
