@@ -29,8 +29,8 @@
                 <div class="w-28">{formatDate(qso.qso_date)}</div>
                 <div class="w-32">{qso.call}</div>
                 <div class="w-14">{qso.band}</div>
-                <div>{parseDatabaseFreqToDottedKhz(qso.freq)}</div>
-                <div>{qso.submode}</div>
+                <div class="w-28">{parseDatabaseFreqToDottedKhz(qso.freq)}</div>
+                <div class="w-12">{qso.mode}</div>
                 <div>{qso.notes}</div>
             </div>
         {/each}
