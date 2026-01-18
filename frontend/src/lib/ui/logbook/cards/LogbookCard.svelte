@@ -6,6 +6,7 @@
     import {formatDate, parseDatabaseFreqToDottedKhz} from "@station-manager/shared-utils";
     import {Checkbox} from "bits-ui";
     import LogbookCardHeader from "$lib/ui/logbook/cards/LogbookCardHeader.svelte";
+    import Pagination from "$lib/ui/logbook/components/Pagination.svelte";
 
     let pageNum = 1;
     let tableRows: types.Qso[] = $state<types.Qso[]>([]);
@@ -14,7 +15,7 @@
 
     const fetchPagedQsos = async (pageNum: number): Promise<void> => {
         try {
-            tableRows = await GetQsoSlice(1, pageNum, 20);
+            tableRows = await GetQsoSlice(1, pageNum, 24);
         } catch (e: unknown) {
             handleAsyncError(e, 'LogbookCard.svelte->fetchPagedQsos()');
         }
@@ -45,13 +46,21 @@
         }
     };
 
+    const editQso = (qsoId: number): void => {
+        try {
+            console.log(`Edit QSO with ID: ${qsoId}`);
+        } catch (e: unknown) {
+            handleAsyncError(e, 'LogbookCard.svelte->editQso()');
+        }
+    }
+
     onMount(() => {
         fetchPagedQsos(pageNum);
     });
 </script>
 
 <LogbookCardHeader/>
-<div class="">
+<div class="h-153">
     <div role="row" class="flex flex-row items-center font-bold border-b mb-0.75 h-8 border-gray-400">
         <div class="w-8 pt-1">
             <Checkbox.Root bind:checked={allSelected} onCheckedChange={(v) => {toggleAll(v);}} class="ring w-4 h-4 mx-2 rounded ring-gray-400">
@@ -97,9 +106,10 @@
                 <div class="w-32" title="{qso.country}">{qso.country}</div>
                 <div class="w-56">{qso.notes}</div>
                 <div class="flex text-xs items-center">
-                    <button class="text-gray-400 font-semibold hover:text-indigo-600 cursor-pointer">Edit</button>
+                    <button onclick={() => editQso(qso.id)} class="text-gray-400 font-semibold hover:text-indigo-600 cursor-pointer">Edit</button>
                 </div>
             </div>
         {/each}
     </div>
 </div>
+<Pagination />
