@@ -5,6 +5,7 @@
     import {GetQsoSlice} from "$lib/wailsjs/go/facade/Service";
     import {formatDate, parseDatabaseFreqToDottedKhz} from "@station-manager/shared-utils";
     import {Checkbox} from "bits-ui";
+    import LogbookCardHeader from "$lib/ui/logbook/cards/LogbookCardHeader.svelte";
 
     let pageNum = 1;
     let tableRows: types.Qso[] = $state<types.Qso[]>([]);
@@ -49,10 +50,10 @@
     });
 </script>
 
+<LogbookCardHeader/>
 <div class="">
-    Logbook Card {tableRows.length}
-    <div role="row" class="flex flex-row font-bold border-b mb-[3px] border-gray-400">
-        <div class="w-8">
+    <div role="row" class="flex flex-row items-center font-bold border-b mb-0.75 h-8 border-gray-400">
+        <div class="w-8 pt-1">
             <Checkbox.Root bind:checked={allSelected} onCheckedChange={(v) => {toggleAll(v);}} class="ring w-4 h-4 mx-2 rounded ring-gray-400">
                 {#snippet children({checked})}
                     {#if checked}
@@ -64,15 +65,18 @@
             </Checkbox.Root>
         </div>
         <div class="w-28">Date</div>
-        <div class="w-32">Call</div>
+        <div class="w-24">Call</div>
+        <div class="w-40">Name</div>
         <div class="w-14">Band</div>
         <div class="w-28">Frequency</div>
-        <div class="w-12">Mode</div>
-        <div>Notes</div>
+        <div class="w-14">Mode</div>
+        <div class="w-32">Country</div>
+        <div class="w-56">Notes</div>
+        <div>&nbsp;</div>
     </div>
     <div role="table">
         {#each tableRows as qso, index (qso.id)}
-            <div id="row-{index}" role="row" class="flex flex-row">
+            <div id="row-{index}" role="row" class="flex flex-row odd:bg-white even:bg-gray-200">
                 <Checkbox.Root
                         checked={selections.includes(qso.id)} onCheckedChange={(v) => {if (v) {select(qso.id);} else {deselect(qso.id);}}}
                         class="ring rounded mt-1 mx-2 ring-gray-400 w-4 h-4">
@@ -85,11 +89,16 @@
                     {/snippet}
                 </Checkbox.Root>
                 <div class="w-28">{formatDate(qso.qso_date)}</div>
-                <div class="w-32">{qso.call}</div>
+                <div class="w-24">{qso.call}</div>
+                <div class="w-40 overflow-hidden text-nowrap text-ellipsis" title="{qso.name}">{qso.name}</div>
                 <div class="w-14">{qso.band}</div>
                 <div class="w-28">{parseDatabaseFreqToDottedKhz(qso.freq)}</div>
-                <div class="w-12">{qso.mode}</div>
-                <div>{qso.notes}</div>
+                <div class="w-14">{qso.mode}</div>
+                <div class="w-32" title="{qso.country}">{qso.country}</div>
+                <div class="w-56">{qso.notes}</div>
+                <div class="flex text-xs items-center">
+                    <button class="text-gray-400 font-semibold hover:text-indigo-600 cursor-pointer">Edit</button>
+                </div>
             </div>
         {/each}
     </div>
