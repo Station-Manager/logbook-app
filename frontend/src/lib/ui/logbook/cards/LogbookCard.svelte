@@ -7,11 +7,13 @@
     import {Checkbox} from "bits-ui";
     import LogbookCardHeader from "$lib/ui/logbook/cards/LogbookCardHeader.svelte";
     import Pagination from "$lib/ui/logbook/components/Pagination.svelte";
+    import {configState} from "$lib/states/config-state.svelte";
 
     let pageNum = 1;
     let tableRows: types.Qso[] = $state<types.Qso[]>([]);
     let selections: number[] = $state([]);
     let allSelected = $state(false);
+    let pageSize = $state(configState.pageSize);
 
     const fetchPagedQsos = async (pageNum: number): Promise<void> => {
         try {
@@ -75,7 +77,7 @@
         </div>
         <div class="w-28">Date</div>
         <div class="w-24">Call</div>
-        <div class="w-40">Name</div>
+        <div class="w-44">Name</div>
         <div class="w-14">Band</div>
         <div class="w-28">Frequency</div>
         <div class="w-14">Mode</div>
@@ -99,11 +101,11 @@
                 </Checkbox.Root>
                 <div class="w-28">{formatDate(qso.qso_date)}</div>
                 <div class="w-24">{qso.call}</div>
-                <div class="w-40 overflow-hidden text-nowrap text-ellipsis" title="{qso.name}">{qso.name}</div>
+                <div class="w-44 overflow-hidden text-nowrap text-ellipsis pr-2" title="{qso.name}">{qso.name}</div>
                 <div class="w-14">{qso.band}</div>
                 <div class="w-28">{parseDatabaseFreqToDottedKhz(qso.freq)}</div>
                 <div class="w-14">{qso.mode}</div>
-                <div class="w-32" title="{qso.country}">{qso.country}</div>
+                <div class="w-32 overflow-hidden text-nowrap text-ellipsis" title="{qso.country}">{qso.country}</div>
                 <div class="w-56">{qso.notes}</div>
                 <div class="flex text-xs items-center">
                     <button onclick={() => editQso(qso.id)} class="text-gray-400 font-semibold hover:text-indigo-600 cursor-pointer">Edit</button>
@@ -112,4 +114,4 @@
         {/each}
     </div>
 </div>
-<Pagination />
+<Pagination callback={fetchPagedQsos} pageNum={pageNum} totalItems={4100} pageSize={pageSize}/>
