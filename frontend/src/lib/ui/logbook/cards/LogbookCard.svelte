@@ -8,7 +8,6 @@
     import LogbookCardHeader from "$lib/ui/logbook/cards/LogbookCardHeader.svelte";
     import Pagination from "$lib/ui/logbook/components/Pagination.svelte";
     import {configState} from "$lib/states/config-state.svelte";
-    import {logbookState} from "$lib/states/logbook-state.svelte";
     import {logbookListState} from "$lib/states/logbook-list-state.svelte";
 
     let pageNum = 1;
