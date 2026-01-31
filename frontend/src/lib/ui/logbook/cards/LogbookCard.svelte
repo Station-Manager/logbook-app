@@ -8,6 +8,8 @@
     import LogbookCardHeader from "$lib/ui/logbook/cards/LogbookCardHeader.svelte";
     import Pagination from "$lib/ui/logbook/components/Pagination.svelte";
     import {configState} from "$lib/states/config-state.svelte";
+    import {logbookState} from "$lib/states/logbook-state.svelte";
+    import {logbookListState} from "$lib/states/logbook-list-state.svelte";
 
     let pageNum = 1;
     let tableRows: types.Qso[] = $state<types.Qso[]>([]);
@@ -56,6 +58,16 @@
         }
     }
 
+    const emailSentStatusCss = (qso: types.Qso): string => {
+        let css = "flex font-semibold w-14";
+        if (qso.sm_fwrd_by_email_status !== "Y") {
+            css += " text-red-700";
+        } else {
+            css += " text-green-700";
+        }
+        return css;
+    }
+
     onMount(() => {
         fetchPagedQsos(pageNum);
     });
@@ -82,7 +94,7 @@
         <div class="w-28">Frequency</div>
         <div class="w-14">Mode</div>
         <div class="w-32">Country</div>
-        <div class="w-56">Notes</div>
+        <div class="w-42">Notes</div>
         <div>&nbsp;</div>
     </div>
     <div role="table">
@@ -100,13 +112,13 @@
                     {/snippet}
                 </Checkbox.Root>
                 <div class="w-28">{formatDate(qso.qso_date)}</div>
-                <div class="w-24">{qso.call}</div>
+                <div class="w-28">{@render status(qso)}</div>
                 <div class="w-44 overflow-hidden text-nowrap text-ellipsis pr-2" title="{qso.name}">{qso.name}</div>
                 <div class="w-14">{qso.band}</div>
                 <div class="w-28">{parseDatabaseFreqToDottedKhz(qso.freq)}</div>
                 <div class="w-14">{qso.mode}</div>
                 <div class="w-32 overflow-hidden text-nowrap text-ellipsis" title="{qso.country}">{qso.country}</div>
-                <div class="w-56">{qso.notes}</div>
+                <div class="w-51">{qso.notes}</div>
                 <div class="flex text-xs items-center">
                     <button onclick={() => editQso(qso.id)} class="text-gray-400 font-semibold hover:text-indigo-600 cursor-pointer">Edit</button>
                 </div>
@@ -114,4 +126,17 @@
         {/each}
     </div>
 </div>
-<Pagination callback={fetchPagedQsos} pageNum={pageNum} totalItems={4100} pageSize={pageSize}/>
+<Pagination callback={fetchPagedQsos} pageNum={pageNum} totalItems={logbookListState.list.length} pageSize={pageSize}/>
+
+{#snippet status(qso: types.Qso)}
+    <span class="flex items-center">
+        <span class={emailSentStatusCss(qso)}>
+            {qso.call}
+        </span>
+        <span>
+            {#if qso.qrzcom_qso_upload_status !== "Y"}
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-2 size-4.25 text-yellow-600"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" /></svg>
+            {/if}
+        </span>
+    </span>
+{/snippet}

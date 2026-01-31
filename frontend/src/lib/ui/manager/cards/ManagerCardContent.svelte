@@ -107,7 +107,7 @@
 </script>
 
 <div class="flex flex-row gap-x-2 p-8">
-    <div class="flex flex-col w-[580px] h-[580px] border-r border-r-gray-300 pr-10 gap-y-4">
+    <div class="flex flex-col w-145 h-145 border-r border-r-gray-300 pr-10 gap-y-4">
         <button onclick={newLogbookAction} class="flex flex-col border border-gray-300 p-4 rounded-md hover:border-gray-400 hover:cursor-pointer">
             <span class="font-semibold">New Log Book</span>
         </button>
@@ -121,7 +121,7 @@
         {/each}
     </div>
     <div class="flex flex-col w-full pl-10">
-        <div class="w-[360px]">
+        <div class="w-90">
             <div class="flex flex-col gap-y-4">
                 <div>
                     <label for="name" class="block text-sm/6 font-medium text-gray-900 dark:text-white">Name</label>
@@ -185,7 +185,7 @@
                     class="rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-gray-400">Select</button>
             <button
                     onclick={() => submitLogbookAction(currentAction)}
-                    class="rounded-md bg-indigo-600 w-[76px] py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
+                    class="rounded-md bg-indigo-600 w-19 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
                 {currentAction}
             </button>
             <button
