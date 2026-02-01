@@ -3,6 +3,7 @@ package facade
 import (
 	"fmt"
 
+	"github.com/Station-Manager/database/sqlite"
 	"github.com/Station-Manager/database/sqlite/meta"
 	"github.com/Station-Manager/errors"
 	"github.com/Station-Manager/types"
@@ -135,7 +136,7 @@ func (s *Service) SetCurrentLogbook(id int64) error {
 	return nil
 }
 
-func (s *Service) GetQsoSlice(logbookId int64, pageNum int, pageSize int) ([]types.Qso, error) {
+func (s *Service) GetQsoSlice(logbookId int64, pageNum int, pageSize int, ordering sqlite.Ordering) ([]types.Qso, error) {
 	const op errors.Op = "facade.Service.GetQsoSlice"
 
 	if !s.initialized.Load() {
@@ -154,7 +155,7 @@ func (s *Service) GetQsoSlice(logbookId int64, pageNum int, pageSize int) ([]typ
 		return nil, errors.New(op).Msg("Page size must be greater than 0")
 	}
 
-	slice, err := s.DatabaseService.FetchQsoSlicePaging(logbookId, pageNum, pageSize)
+	slice, err := s.DatabaseService.FetchQsoSlicePaging(logbookId, pageNum, pageSize, ordering)
 	if err != nil {
 		err = errors.New(op).Err(err)
 		s.LoggerService.ErrorWith().Err(err).Msgf("Failed to fetch QSO slice for logbook ID: %d", logbookId)

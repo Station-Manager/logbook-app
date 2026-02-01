@@ -7,6 +7,7 @@ import (
 	"os"
 	"runtime/debug"
 
+	"github.com/Station-Manager/database/sqlite"
 	"github.com/Station-Manager/errors"
 	"github.com/Station-Manager/iocdi"
 	"github.com/Station-Manager/utils"
@@ -95,7 +96,9 @@ func main() {
 		Bind: []interface{}{
 			facade,
 		},
-		EnumBind:                         []interface{}{},
+		EnumBind: []interface{}{
+			sqlite.OrderingNames,
+		},
 		WindowStartState:                 options.Normal,
 		ErrorFormatter:                   nil,
 		CSSDragProperty:                  "",
