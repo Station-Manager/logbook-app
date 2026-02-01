@@ -88,9 +88,17 @@
         <div class="w-14">Band</div>
         <div class="w-28">Frequency</div>
         <div class="w-14">Mode</div>
-        <div class="w-32">Country</div>
-        <div class="w-8">U</div>
-        <div>&nbsp;</div>
+        <div class="w-36">Country</div>
+        <div class="w-8">
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
+            </svg>
+        </div>
+        <div>
+            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mb-1 size-5 -rotate-30">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+            </svg>
+        </div>
     </div>
     <div role="table">
         {#each tableRows as qso, index (qso.id)}
@@ -112,7 +120,7 @@
                 <div class="w-14">{qso.band}</div>
                 <div class="w-28">{parseDatabaseFreqToDottedKhz(qso.freq)}</div>
                 <div class="w-14">{qso.mode}</div>
-                <div class="w-32 overflow-hidden text-nowrap text-ellipsis" title="{qso.country}">{qso.country}</div>
+                <div class="w-36 overflow-hidden text-nowrap text-ellipsis" title="{qso.country}">{qso.country}</div>
                 <div class="w-8">{@render uploadStatus(qso)}</div>
                 <div class="w-8">{@render emailStatus(qso)}</div>
                 <div class="flex text-xs items-center">
