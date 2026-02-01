@@ -1,6 +1,4 @@
 <script lang="ts">
-    import {onMount} from "svelte";
-
     interface Props {
         callback: (page: number) => void;
         pageNum: number;
@@ -10,17 +8,17 @@
 
     let {callback = $bindable(), pageNum, totalItems, pageSize}: Props = $props();
     let startIndex: number = $state(0);
-    let pageCount: number = $state(0); // Total number of pages
-    let endIndex: number = $state(0); // Number of items on the last page
+    let pageCount: number = $state(1); // Total number of pages
+    let endIndex: number = $state(1); // Number of items on the last page
 
-    const update = (pgNum: number): {startInx: number, endInx: number} => {
+    const update = (pgNum: number, total: number): {startInx: number, endInx: number} => {
         if (pgNum < 1) {
             return {startInx: 0, endInx: 0};
         }
         const start = (pgNum * pageSize) - pageSize + 1;
         const end = pgNum * pageSize;
-        if (end > totalItems) {
-            return {startInx: start, endInx: totalItems};
+        if (end > total) {
+            return {startInx: start, endInx: total};
         }
         return {startInx: start, endInx: end};
     }
@@ -30,7 +28,7 @@
             return;
         }
         pageNum++;
-        const up = update(pageNum);
+        const up = update(pageNum, totalItems);
         startIndex = up.startInx;
         endIndex = up.endInx;
         callback(pageNum);
@@ -41,14 +39,14 @@
             return;
         }
         pageNum--;
-        const up = update(pageNum);
+        const up = update(pageNum, totalItems);
         startIndex = up.startInx;
         endIndex = up.endInx;
         callback(pageNum);
     }
 
-    onMount(() => {
-        const up = update(pageNum);
+    $effect(() => {
+        const up = update(pageNum, totalItems);
         startIndex = up.startInx;
         endIndex = up.endInx;
         pageCount = Math.ceil(totalItems / pageSize);

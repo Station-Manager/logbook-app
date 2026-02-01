@@ -168,3 +168,27 @@ func (s *Service) GetQsoSlice(logbookId int64, pageNum int, pageSize int) ([]typ
 
 	return slice, nil
 }
+
+// GetQsoCount retrieves the count of QSOs for a given logbook ID. Returns an error if the service is not initialized or input is invalid.
+func (s *Service) GetQsoCount(logbookId int64) (int64, error) {
+	const op errors.Op = "facade.Service.GetQsoCount"
+
+	if !s.initialized.Load() {
+		err := errors.New(op).Msg(errMsgServiceNotInit)
+		s.LoggerService.ErrorWith().Err(err).Msg(errMsgServiceNotInit)
+		return -1, err
+	}
+
+	if logbookId < 1 {
+		return -1, errors.New(op).Msg("Logbook ID must be greater than 0")
+	}
+
+	count, err := s.DatabaseService.FetchQsoCountByLogbookId(logbookId)
+	if err != nil {
+		err = errors.New(op).Err(err)
+		s.LoggerService.ErrorWith().Err(err).Msgf("Failed to fetch QSO count for logbook ID: %d", logbookId)
+		return -1, err
+	}
+
+	return count, nil
+}
