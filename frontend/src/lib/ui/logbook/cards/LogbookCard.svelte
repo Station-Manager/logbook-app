@@ -10,12 +10,14 @@
     import {configState} from "$lib/states/config-state.svelte";
     import {sqlite} from "$lib/wailsjs/go/models";
 
-    let totalItems = $state(0);
     let pageNum = 1;
+
+    let totalItems = $state(0);
     let tableRows: types.Qso[] = $state<types.Qso[]>([]);
     let selections: number[] = $state([]);
     let allSelected = $state(false);
     let pageSize = $state(configState.pageSize);
+    let showEditPanel = $state(false);
 
     const fetchPagedQsos = async (pageNum: number): Promise<void> => {
         try {
@@ -53,6 +55,7 @@
     const editQso = (qsoId: number): void => {
         try {
             console.log(`Edit QSO with ID: ${qsoId}`);
+            showEditPanel = true;
         } catch (e: unknown) {
             handleAsyncError(e, 'LogbookCard.svelte->editQso()');
         }
@@ -130,6 +133,14 @@
         {/each}
     </div>
 </div>
+{#if showEditPanel}
+<div class="absolute top-25 left-0 w-full h-164.25 bg-gray-200 opacity-90 z-10">
+    <div class="bg-white rounded-lg m-8 h-150">
+Test
+    </div>
+</div>
+
+{/if}
 <Pagination callback={fetchPagedQsos} pageNum={pageNum} totalItems={totalItems} pageSize={pageSize}/>
 
 {#snippet uploadStatus(qso: types.Qso)}
