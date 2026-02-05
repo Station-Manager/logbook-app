@@ -1,6 +1,5 @@
 <script lang="ts">
     import {getFocusContext} from "$lib/states/focus-context.svelte";
-    import {qsoEditState} from "$lib/states/qso-edit-state.svelte";
     import {onMount} from "svelte";
 
     interface Props {
