@@ -1,12 +1,12 @@
 <script lang="ts">
-    import {getFocusContext} from "$lib/states/focus-context.svelte";
+//    import {getFocusContext} from "$lib/states/focus-context.svelte";
     import {onMount} from "svelte";
 
     interface Props {
         qsoId: number
     }
 
-    const focusContext = getFocusContext();
+//    const focusContext = getFocusContext();
 
     let {qsoId}: Props = $props();
 
