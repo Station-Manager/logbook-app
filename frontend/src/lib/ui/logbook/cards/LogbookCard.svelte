@@ -10,6 +10,7 @@
     import {configState} from "$lib/states/config-state.svelte";
     import {sqlite} from "$lib/wailsjs/go/models";
     import EditQsoPanel from "$lib/ui/logbook/cards/EditQsoPanel.svelte";
+    import {qsoEditState} from "$lib/states/qso-edit-state.svelte";
 
     let pageNum = 1;
 
@@ -18,7 +19,7 @@
     let selections: number[] = $state([]);
     let allSelected = $state(false);
     let pageSize = $state(configState.pageSize);
-    let showEditPanel = $state(false);
+    // let showEditPanel = $state(false);
     let editQsoId = $state(0);
 
     const fetchPagedQsos = async (pageNum: number): Promise<void> => {
@@ -57,7 +58,7 @@
     const editQso = (qsoId: number): void => {
         try {
             console.log(`Edit QSO with ID: ${qsoId}`);
-            showEditPanel = true;
+            qsoEditState.panelOpen = true;
             editQsoId = qsoId;
         } catch (e: unknown) {
             handleAsyncError(e, 'LogbookCard.svelte->editQso()');
@@ -136,7 +137,7 @@
         {/each}
     </div>
 </div>
-{#if showEditPanel}
+{#if qsoEditState.panelOpen}
 <div class="absolute top-25 left-0 w-full h-164.25 bg-gray-200 opacity-90 z-10">
     <div class="bg-white rounded-lg m-8 h-150 p-8 shadow-2xl">
     <EditQsoPanel qsoId={editQsoId}/>

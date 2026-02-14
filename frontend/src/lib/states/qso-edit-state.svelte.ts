@@ -28,6 +28,7 @@ export interface QsoEditState {
     ant_path: string;
     fromQso(this: QsoEditState, qso: types.Qso): void;
     toQso(this: QsoEditState): types.Qso;
+    panelOpen: boolean;
 }
 
 export const qsoEditState: QsoEditState = $state({
@@ -110,4 +111,5 @@ export const qsoEditState: QsoEditState = $state({
 
         return qsoObject;
     },
+    panelOpen: false,
 });
