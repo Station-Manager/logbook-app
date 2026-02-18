@@ -11,6 +11,7 @@
     import {sqlite} from "$lib/wailsjs/go/models";
     import EditQsoPanel from "$lib/ui/logbook/cards/EditQsoPanel.svelte";
     import {qsoEditState} from "$lib/states/qso-edit-state.svelte";
+    import EmailDialog from "$lib/ui/logbook/components/EmailDialog.svelte";
 
     let pageNum = 1;
 
@@ -55,6 +56,10 @@
         }
     };
 
+    const toggleSendEmailDialog = (): void => {
+        sendEmailDialogOpen = !sendEmailDialogOpen;
+    }
+
     const editQso = (qsoId: number): void => {
         try {
             console.log(`Edit QSO with ID: ${qsoId}`);
@@ -90,13 +95,13 @@
             </Checkbox.Root>
         </div>
         {#if selections.length > 0}
-            <div class="absolute top-25 left-8 z-50 bg-white h-7 w-27.5 items-center flex pl-1 space-x-3">
+            <div class="absolute top-25 left-8 z-20 bg-white h-7 w-27.5 items-center flex pl-1 space-x-3">
                 <button class="cursor-pointer font-semibold text-indigo-500 hover:text-indigo-700" aria-label="export selected QSOs" title="Export selected QSOs">
                     <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                     </svg>
                 </button>
-                <button class="text-indigo-500 hover:text-indigo-700 cursor-pointer pb-0.5" type="button" aria-label="forward by email" title="Forward selected QSOs by email">
+                <button onclick={toggleSendEmailDialog} class="text-indigo-500 hover:text-indigo-700 cursor-pointer pb-0.5" type="button" aria-label="forward by email" title="Forward selected QSOs by email">
                     <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 -rotate-25">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
                     </svg>
@@ -166,9 +171,7 @@
 </div>
 {/if}
 {#if sendEmailDialogOpen}
-<div class="absolute top-25 left-0 w-full h-164.25 bg-gray-200 opacity-90 z-10">
-EMAIL
-</div>
+    <EmailDialog {selections}/>
 {/if}
 <Pagination callback={fetchPagedQsos} pageNum={pageNum} totalItems={totalItems} pageSize={pageSize}/>
 
