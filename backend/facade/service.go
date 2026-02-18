@@ -1,11 +1,15 @@
 package facade
 
 import (
+	"context"
+
 	"github.com/Station-Manager/config"
 	"github.com/Station-Manager/database/sqlite"
+	"github.com/Station-Manager/email"
 	"github.com/Station-Manager/errors"
 	"github.com/Station-Manager/logging"
 	"github.com/Station-Manager/types"
+	"github.com/go-playground/validator/v10"
 
 	"sync"
 	"sync/atomic"
@@ -19,6 +23,7 @@ type Service struct {
 	ConfigService   *config.Service  `di.inject:"configservice"`
 	LoggerService   *logging.Service `di.inject:"loggingservice"`
 	DatabaseService *sqlite.Service  `di.inject:"sqliteservice"`
+	EmailService    *email.Service   `di.inject:"emailservice"`
 
 	initialized atomic.Bool
 	started     atomic.Bool // guarded via atomic operations; Start/Stop also hold mu for broader state
@@ -28,6 +33,10 @@ type Service struct {
 
 	currentLogbook types.Logbook
 	requiredCfgs   *types.RequiredConfigs
+
+	ctx context.Context
+
+	validate *validator.Validate
 }
 
 func (s *Service) Initialize() error {
@@ -50,12 +59,22 @@ func (s *Service) Initialize() error {
 			return
 		}
 
+		if s.EmailService == nil {
+			initErr = errors.New(op).Msg(errMsgNilEmailService)
+			return
+		}
+
 		reqCfg, err := s.ConfigService.RequiredConfigs()
 		if err != nil {
 			initErr = errors.New(op).Err(err)
 			return
 		}
 		s.requiredCfgs = &reqCfg
+
+		if err = s.initializeValidation(); err != nil {
+			initErr = errors.New(op).Err(err)
+			return
+		}
 
 		if err = s.openAndLoadFromDatabase(); err != nil {
 			initErr = errors.New(op).Err(err)

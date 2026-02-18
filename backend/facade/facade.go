@@ -2,6 +2,7 @@ package facade
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/Station-Manager/database/sqlite"
 	"github.com/Station-Manager/database/sqlite/meta"
@@ -192,4 +193,42 @@ func (s *Service) GetQsoCount(logbookId int64) (int64, error) {
 	}
 
 	return count, nil
+}
+
+func (s *Service) ForwardQsosViaEmail(slice []types.Qso, recipientEmail string) error {
+	const op errors.Op = "facade.Service.ForwardQsosViaEmail"
+
+	if !s.initialized.Load() {
+		err := errors.New(op).Msg(errMsgServiceNotInit)
+		s.LoggerService.ErrorWith().Err(err).Msg(errMsgServiceNotInit)
+		return err
+	}
+
+	if len(slice) == 0 {
+		err := errors.New(op).Msg("No QSOs to forward")
+		s.LoggerService.ErrorWith().Err(err).Msg("No QSOs to forward")
+		return errors.Root(err)
+	}
+
+	recipientEmail = strings.TrimSpace(recipientEmail)
+	if err := s.validate.Var(recipientEmail, "required,email"); err != nil {
+		verr := errors.New(op).Msg("Invalid recipient email address")
+		s.LoggerService.ErrorWith().Err(err).Msg("Invalid recipient email address")
+		return verr
+	}
+
+	mail, err := s.EmailService.BuildEmailWithADIFAttachment("", "", "", []string{recipientEmail}, slice)
+	if err != nil {
+		err = errors.New(op).Err(err)
+		s.LoggerService.ErrorWith().Err(err).Msg("Failed to build email with ADIF attachment")
+		return errors.Root(err)
+	}
+
+	if err = s.EmailService.Send(mail); err != nil {
+		err = errors.New(op).Err(err)
+		s.LoggerService.ErrorWith().Err(err).Msg("Failed to send email")
+		return errors.Root(err)
+	}
+
+	return nil
 }
