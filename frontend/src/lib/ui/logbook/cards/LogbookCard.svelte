@@ -19,7 +19,7 @@
     let selections: number[] = $state([]);
     let allSelected = $state(false);
     let pageSize = $state(configState.pageSize);
-    // let showEditPanel = $state(false);
+    let sendEmailDialogOpen = $state(false);
     let editQsoId = $state(0);
 
     const fetchPagedQsos = async (pageNum: number): Promise<void> => {
@@ -89,6 +89,25 @@
                 {/snippet}
             </Checkbox.Root>
         </div>
+        {#if selections.length > 0}
+            <div class="absolute top-25 left-8 z-50 bg-white h-7 w-27.5 items-center flex pl-1 space-x-3">
+                <button class="cursor-pointer font-semibold text-indigo-500 hover:text-indigo-700" aria-label="export selected QSOs" title="Export selected QSOs">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                    </svg>
+                </button>
+                <button class="text-indigo-500 hover:text-indigo-700 cursor-pointer pb-0.5" type="button" aria-label="forward by email" title="Forward selected QSOs by email">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 -rotate-25">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                    </svg>
+                </button>
+                <button class="text-indigo-500 cursor-pointer" title="Upload to online services" aria-label="upload">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
+                    </svg>
+                </button>
+            </div>
+        {/if}
         <div class="w-28">Date</div>
         <div class="w-28">Call</div>
         <div class="w-44">Name</div>
@@ -111,7 +130,9 @@
         {#each tableRows as qso, index (qso.id)}
             <div id="row-{index}" role="row" class="flex flex-row odd:bg-white even:bg-gray-200">
                 <Checkbox.Root
-                        checked={selections.includes(qso.id)} onCheckedChange={(v) => {if (v) {select(qso.id);} else {deselect(qso.id);}}}
+                        id={qso.id.toString()}
+                        checked={selections.includes(qso.id)}
+                        onCheckedChange={(v) => {if (v) {select(qso.id);} else {deselect(qso.id);}}}
                         class="ring rounded mt-1 mx-2 ring-gray-400 w-4 h-4">
                     {#snippet children({checked})}
                         {#if checked}
@@ -143,7 +164,11 @@
     <EditQsoPanel qsoId={editQsoId}/>
     </div>
 </div>
-
+{/if}
+{#if sendEmailDialogOpen}
+<div class="absolute top-25 left-0 w-full h-164.25 bg-gray-200 opacity-90 z-10">
+EMAIL
+</div>
 {/if}
 <Pagination callback={fetchPagedQsos} pageNum={pageNum} totalItems={totalItems} pageSize={pageSize}/>
 
