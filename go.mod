@@ -6,21 +6,22 @@ require (
 	github.com/Station-Manager/config v0.0.41
 	github.com/Station-Manager/database v0.0.58
 	github.com/Station-Manager/email v0.0.8
+	github.com/Station-Manager/enums v0.0.8
 	github.com/Station-Manager/errors v0.0.11
 	github.com/Station-Manager/iocdi v0.0.1
 	github.com/Station-Manager/logging v0.0.13
 	github.com/Station-Manager/types v0.0.79
 	github.com/Station-Manager/utils v0.0.6
+	github.com/aarondl/sqlboiler/v4 v4.19.7
+	github.com/go-playground/validator/v10 v10.30.1
 	github.com/wailsapp/wails/v2 v2.11.0
 )
 
 require (
 	github.com/Station-Manager/adif v0.0.6 // indirect
-	github.com/Station-Manager/enums v0.0.8 // indirect
 	github.com/aarondl/inflect v0.0.2 // indirect
 	github.com/aarondl/null/v8 v8.1.3 // indirect
 	github.com/aarondl/randomize v0.0.2 // indirect
-	github.com/aarondl/sqlboiler/v4 v4.19.7 // indirect
 	github.com/aarondl/strmangle v0.0.9 // indirect
 	github.com/bep/debounce v1.2.1 // indirect
 	github.com/creack/goselect v0.1.3 // indirect
@@ -31,7 +32,6 @@ require (
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.30.1 // indirect
 	github.com/goccy/go-json v0.10.5 // indirect
 	github.com/godbus/dbus/v5 v5.2.2 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect

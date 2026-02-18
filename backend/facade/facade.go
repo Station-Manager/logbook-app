@@ -10,6 +10,18 @@ import (
 	"github.com/Station-Manager/types"
 )
 
+// allowedBrowserDomains is the allowlist of domains that can be opened in the browser.
+// This prevents SSRF-style attacks and phishing via malicious URLs.
+var allowedBrowserDomains = map[string]bool{
+	"www.qrz.com":     true,
+	"qrz.com":         true,
+	"www.hamqth.com":  true,
+	"hamqth.com":      true,
+	"clublog.org":     true,
+	"www.clublog.org": true,
+	"lotw.arrl.org":   true,
+}
+
 // FetchUiConfig retrieves the UI configuration object. It returns an error if the service is not initialized, or the underlying
 // ConfigService returns an error.
 func (s *Service) FetchUiConfig() (*types.UiConfig, error) {
