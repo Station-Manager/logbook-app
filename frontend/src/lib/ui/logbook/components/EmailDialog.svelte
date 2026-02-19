@@ -14,6 +14,8 @@
     const emailPattern: RegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const focusContext = getFocusContext();
 
+    let container: HTMLDivElement | null = null;
+
     let {selections}: Props = $props();
     let sending = $state(false);
 
@@ -37,13 +39,17 @@
 
         try {
             sending = true;
+            if (container) container.classList.add("cursor-not-allowed");
             showToast.INFOSTICKY("Sending "+selections.length+" QSOs by email...");
             await ForwardQsosViaEmail(selections, recipientAddress);
             showToast.SUCCESS("Email sent successfully.");
         } catch(e: unknown) {
             handleAsyncError(e, "Sending session QSOs by email failed.")
+        } finally {
+            if (container) container.classList.add("cursor-default");
+            sending = false;
+            cancelClickHandler();
         }
-        sending = false;
     }
 
     onMount(async (): Promise<void> => {
@@ -51,7 +57,9 @@
     })
 </script>
 
-<div class="flex absolute top-23.25 w-full h-155 bg-gray-300/50 z-30 pt-32 justify-center">
+<div
+        bind:this={container}
+        class="flex absolute top-23.25 w-full h-155 bg-gray-300/50 z-30 pt-32 justify-center">
     <div class="flex flex-col bg-white rounded-lg shadow-2xl w-100 h-42.5 z-40 p-6">
         <div>
             <div>
