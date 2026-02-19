@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/Station-Manager/config v0.0.41
-	github.com/Station-Manager/database v0.0.58
+	github.com/Station-Manager/database v0.0.59
 	github.com/Station-Manager/email v0.0.8
 	github.com/Station-Manager/enums v0.0.8
 	github.com/Station-Manager/errors v0.0.11
@@ -18,7 +18,7 @@ require (
 )
 
 require (
-	github.com/Station-Manager/adif v0.0.6 // indirect
+	github.com/Station-Manager/adif v0.0.8 // indirect
 	github.com/aarondl/inflect v0.0.2 // indirect
 	github.com/aarondl/null/v8 v8.1.3 // indirect
 	github.com/aarondl/randomize v0.0.2 // indirect
@@ -67,7 +67,7 @@ require (
 	go.bug.st/serial v1.6.4 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	golang.org/x/crypto v0.48.0 // indirect
-	golang.org/x/exp v0.0.0-20260212183809-81e46e3db34a // indirect
+	golang.org/x/exp v0.0.0-20260218203240-3dfff04db8fa // indirect
 	golang.org/x/net v0.50.0 // indirect
 	golang.org/x/sys v0.41.0 // indirect
 	golang.org/x/text v0.34.0 // indirect
@@ -76,5 +76,5 @@ require (
 	modernc.org/libc v1.68.0 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.11.0 // indirect
-	modernc.org/sqlite v1.46.0 // indirect
+	modernc.org/sqlite v1.46.1 // indirect
 )
