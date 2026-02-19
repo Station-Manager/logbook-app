@@ -12,6 +12,7 @@
     import EditQsoPanel from "$lib/ui/logbook/cards/EditQsoPanel.svelte";
     import {qsoEditState} from "$lib/states/qso-edit-state.svelte";
     import EmailDialog from "$lib/ui/logbook/components/EmailDialog.svelte";
+    import {sendEmailState} from "$lib/states/send-email-state.svelte";
 
     let pageNum = 1;
 
@@ -20,7 +21,6 @@
     let selections: number[] = $state([]);
     let allSelected = $state(false);
     let pageSize = $state(configState.pageSize);
-    let sendEmailDialogOpen = $state(false);
     let editQsoId = $state(0);
 
     const fetchPagedQsos = async (pageNum: number): Promise<void> => {
@@ -57,7 +57,7 @@
     };
 
     const toggleSendEmailDialog = (): void => {
-        sendEmailDialogOpen = !sendEmailDialogOpen;
+        sendEmailState.dialogOpen = !sendEmailState.dialogOpen;
     }
 
     const editQso = (qsoId: number): void => {
@@ -170,7 +170,7 @@
     </div>
 </div>
 {/if}
-{#if sendEmailDialogOpen}
+{#if sendEmailState.dialogOpen}
     <EmailDialog {selections}/>
 {/if}
 <Pagination callback={fetchPagedQsos} pageNum={pageNum} totalItems={totalItems} pageSize={pageSize}/>
