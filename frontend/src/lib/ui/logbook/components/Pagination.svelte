@@ -53,7 +53,7 @@
     });
 </script>
 
-<div class="flex flex-row h-11.75 bg-white items-center justify-between mr-2 border">
+<div class="flex flex-row h-11.75 bg-white items-center justify-between mr-2">
     <div>
         <select>
             <option value="24">24</option>
