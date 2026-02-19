@@ -21,7 +21,7 @@ import (
 
 const (
 	minWidth  int = 1024
-	minHeight int = 755
+	minHeight int = 758
 )
 
 var (
