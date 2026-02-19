@@ -1,15 +1,11 @@
 <script lang="ts">
-    import {configState} from "$lib/states/config-state.svelte";
-    import {sendEmailState} from "$lib/states/send-email-state.svelte";
+    import {sendEmailFormState, sendEmailState} from "$lib/states/send-email-state.svelte";
     import {inputBase} from "@station-manager/shared-utils";
 
     interface Props {
         selections: number[]
     }
     let {selections}: Props = $props();
-    let formState = $state({
-        email: configState.defaultEmail
-    });
 
     const cancelClickHandler = ():void => {
         sendEmailState.dialogOpen = false;
@@ -23,7 +19,7 @@
                 <label class="flex flex-row text-sm/5 font-medium text-gray-900" for="email">Send selected ({selections.length}) QSOs to:</label>
                 <div class="mt-2 w-[320px]">
                     <input
-                            bind:value={formState.email}
+                            bind:value={sendEmailFormState.email}
                             id="email"
                             type="email"
                             placeholder="Enter email address"
