@@ -135,7 +135,7 @@
         {#each tableRows as qso, index (qso.id)}
             <div id="row-{index}" role="row" class="flex flex-row odd:bg-white even:bg-gray-200">
                 <Checkbox.Root
-                        id={qso.id.toString()}
+                        title={qso.id.toString()}
                         checked={selections.includes(qso.id)}
                         onCheckedChange={(v) => {if (v) {select(qso.id);} else {deselect(qso.id);}}}
                         class="ring rounded mt-1 mx-2 ring-gray-400 w-4 h-4">
