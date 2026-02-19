@@ -1,15 +1,24 @@
 <script lang="ts">
     import {sendEmailFormState, sendEmailState} from "$lib/states/send-email-state.svelte";
     import {inputBase} from "@station-manager/shared-utils";
+    import {getFocusContext} from "@station-manager/shared-utils/svelte";
+    import {onMount} from "svelte";
 
     interface Props {
         selections: number[]
     }
+
+    const focusContext = getFocusContext();
+
     let {selections}: Props = $props();
 
     const cancelClickHandler = ():void => {
         sendEmailState.dialogOpen = false;
     }
+
+    onMount(async (): Promise<void> => {
+        await focusContext.focus('fwdSessionEmailInput');
+    })
 </script>
 
 <div class="flex absolute top-23.25 w-full h-155 bg-gray-300/50 z-30 pt-32 justify-center">
@@ -19,6 +28,7 @@
                 <label class="flex flex-row text-sm/5 font-medium text-gray-900" for="email">Send selected ({selections.length}) QSOs to:</label>
                 <div class="mt-2 w-[320px]">
                     <input
+                            bind:this={focusContext.refs.fwdSessionEmailInput}
                             bind:value={sendEmailFormState.email}
                             id="email"
                             type="email"

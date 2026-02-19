@@ -2,8 +2,12 @@
 	import './layout.css';
 	import MainNav from "$lib/ui/MainNav.svelte";
 	import {SvelteToast} from "@zerodevx/svelte-toast";
+	import {setFocusContext} from "@station-manager/shared-utils/svelte";
 
 	let { children } = $props();
+
+	// Initialize focus context for cross-component focus management
+	setFocusContext();
 </script>
 
 <header>
