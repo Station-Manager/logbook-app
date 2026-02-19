@@ -1,3 +1,4 @@
+// Package facade: logbook-app
 package facade
 
 import (
@@ -208,6 +209,10 @@ func (s *Service) GetQsoCount(logbookId int64) (int64, error) {
 	return count, nil
 }
 
+// ForwardQsosViaEmail forwards a list of QSO records by email to a specified recipient.
+// Requires the service to be initialized and a valid recipient email address.
+// Validates input IDs, retrieves QSOs, builds an email with an ADIF attachment, and sends it.
+// Marks forwarded QSOs as sent upon success or logs errors if operations fail.
 func (s *Service) ForwardQsosViaEmail(slice []int64, recipientEmail string) error {
 	const op errors.Op = "facade.Service.ForwardQsosViaEmail"
 
@@ -232,7 +237,6 @@ func (s *Service) ForwardQsosViaEmail(slice []int64, recipientEmail string) erro
 
 	var list types.QsoSlice
 	for _, id := range slice {
-		fmt.Println("Fetching QSO with ID: ", id)
 		qso, err := s.DatabaseService.FetchQsoById(id)
 		if err != nil {
 			err = errors.New(op).Err(err)
@@ -252,6 +256,12 @@ func (s *Service) ForwardQsosViaEmail(slice []int64, recipientEmail string) erro
 	if err = s.EmailService.Send(mail); err != nil {
 		err = errors.New(op).Err(err)
 		s.LoggerService.ErrorWith().Err(err).Msg("Failed to send email")
+		return errors.Root(err)
+	}
+
+	if err = s.markQsoSliceAsForwardedByEmail(list); err != nil {
+		err = errors.New(op).Err(err)
+		s.LoggerService.ErrorWith().Err(err).Msg("Failed to mark QSOs as forwarded by email")
 		return errors.Root(err)
 	}
 

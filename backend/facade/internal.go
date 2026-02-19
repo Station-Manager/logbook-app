@@ -11,6 +11,7 @@ import (
 	"github.com/aarondl/sqlboiler/v4/boil"
 )
 
+// openAndLoadFromDatabase opens the database, performs migrations, loads configurations, and sets the default logbook.
 func (s *Service) openAndLoadFromDatabase() error {
 	const op errors.Op = "facade.Service.loadFromDatabase"
 
