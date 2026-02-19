@@ -81,7 +81,7 @@
 </script>
 
 <LogbookCardHeader/>
-<div class="h-153">
+<div class="h-160">
     <div role="row" class="flex flex-row items-center font-bold border-b mb-0.75 h-8 border-gray-400">
         <div class="w-8 pt-1">
             <Checkbox.Root bind:checked={allSelected} onCheckedChange={(v) => {toggleAll(v);}} class="ring w-4 h-4 mx-2 rounded ring-gray-400">
@@ -131,7 +131,7 @@
             </svg>
         </div>
     </div>
-    <div role="table">
+    <div role="table" class="">
         {#each tableRows as qso, index (qso.id)}
             <div id="row-{index}" role="row" class="flex flex-row odd:bg-white even:bg-gray-200">
                 <Checkbox.Root
