@@ -208,7 +208,7 @@ func (s *Service) GetQsoCount(logbookId int64) (int64, error) {
 	return count, nil
 }
 
-func (s *Service) ForwardQsosViaEmail(slice []types.Qso, recipientEmail string) error {
+func (s *Service) ForwardQsosViaEmail(slice []int64, recipientEmail string) error {
 	const op errors.Op = "facade.Service.ForwardQsosViaEmail"
 
 	if !s.initialized.Load() {
@@ -230,7 +230,19 @@ func (s *Service) ForwardQsosViaEmail(slice []types.Qso, recipientEmail string) 
 		return verr
 	}
 
-	mail, err := s.EmailService.BuildEmailWithADIFAttachment("", "", "", []string{recipientEmail}, slice)
+	var list types.QsoSlice
+	for _, id := range slice {
+		fmt.Println("Fetching QSO with ID: ", id)
+		qso, err := s.DatabaseService.FetchQsoById(id)
+		if err != nil {
+			err = errors.New(op).Err(err)
+			s.LoggerService.ErrorWith().Err(err).Msgf("Failed to fetch QSO with ID: %d", id)
+			return errors.Root(err)
+		}
+		list = append(list, qso)
+	}
+
+	mail, err := s.EmailService.BuildEmailWithADIFAttachment("", "", "", []string{recipientEmail}, list)
 	if err != nil {
 		err = errors.New(op).Err(err)
 		s.LoggerService.ErrorWith().Err(err).Msg("Failed to build email with ADIF attachment")

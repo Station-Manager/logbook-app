@@ -3,17 +3,47 @@
     import {inputBase} from "@station-manager/shared-utils";
     import {getFocusContext} from "@station-manager/shared-utils/svelte";
     import {onMount} from "svelte";
+    import {showToast} from "$lib/utils/toast";
+    import {handleAsyncError} from "$lib/utils/error-handler";
+    import {ForwardQsosViaEmail} from "$lib/wailsjs/go/facade/Service";
 
     interface Props {
         selections: number[]
     }
 
+    const emailPattern: RegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const focusContext = getFocusContext();
 
     let {selections}: Props = $props();
+    let sending = $state(false);
 
     const cancelClickHandler = ():void => {
         sendEmailState.dialogOpen = false;
+    }
+
+    const sendEmail = async (): Promise<void> => {
+        if (sending) return;
+
+        const recipientAddress = sendEmailFormState.email;
+        if (!recipientAddress || recipientAddress.length === 0) {
+            await focusContext.focus('fwdSessionEmailInput');
+            return;
+        }
+
+        if (emailPattern.test(recipientAddress) == false) {
+            await focusContext.focus('fwdSessionEmailInput', true);
+            return;
+        }
+
+        try {
+            sending = true;
+            showToast.INFOSTICKY("Sending "+selections.length+" QSOs by email...");
+            await ForwardQsosViaEmail(selections, recipientAddress);
+            showToast.SUCCESS("Email sent successfully.");
+        } catch(e: unknown) {
+            handleAsyncError(e, "Sending session QSOs by email failed.")
+        }
+        sending = false;
     }
 
     onMount(async (): Promise<void> => {
@@ -43,7 +73,11 @@
                     type="button"
                     class="cursor-pointer rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">
                 Cancel</button>
-            <button type="submit" class="cursor-pointer rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Send</button>
+            <button
+                    onclick={sendEmail}
+                    type="submit"
+                    class="cursor-pointer rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                Send</button>
         </div>
     </div>
 </div>
