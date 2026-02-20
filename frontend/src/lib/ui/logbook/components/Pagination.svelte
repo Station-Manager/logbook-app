@@ -2,16 +2,16 @@
     import {configState} from "$lib/states/config-state.svelte";
 
     interface Props {
-        callback: (page: number) => void;
+        callback: (page: number, pageSize: number) => void;
         pageNum: number;
         totalItems: number;
-        pageSize: number;
     }
 
-    let {callback = $bindable(), pageNum, totalItems, pageSize}: Props = $props();
+    let {callback = $bindable(), pageNum, totalItems}: Props = $props();
     let startIndex: number = $state(0);
     let pageCount: number = $state(1); // Total number of pages
     let endIndex: number = $state(1); // Number of items on the last page
+    let pageSize: number = $state(configState.pageSize);
 
     const update = (pgNum: number, total: number): {startInx: number, endInx: number} => {
         if (pgNum < 1) {
@@ -33,7 +33,7 @@
         const up = update(pageNum, totalItems);
         startIndex = up.startInx;
         endIndex = up.endInx;
-        callback(pageNum);
+        callback(pageNum, pageSize);
     }
 
     const onClickPrevious = () => {
@@ -44,7 +44,15 @@
         const up = update(pageNum, totalItems);
         startIndex = up.startInx;
         endIndex = up.endInx;
-        callback(pageNum);
+        callback(pageNum, pageSize);
+    }
+
+    const onChangePageSize = (event: Event) => {
+        const target = event.currentTarget as HTMLSelectElement;
+        const value = target.value;
+        pageSize = value === 'all' ? totalItems : parseInt(value, 10);
+        pageNum = 1;
+        callback(pageNum, pageSize);
     }
 
     $effect(() => {
@@ -59,7 +67,7 @@
     <div class="flex flex-row space-x-2 items-center text-sm text-gray-700">
         <label for="page_size" class="">Page Size</label>
         <select
-                bind:value={pageSize}
+                onchange={onChangePageSize}
                 id="page_size"
                 class="w-16 focus:outline-2 focus:outline-indigo-600 rounded-md">
             <option value="{configState.pageSize}">{configState.pageSize}</option>

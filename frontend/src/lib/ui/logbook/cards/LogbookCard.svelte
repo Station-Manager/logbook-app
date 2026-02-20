@@ -20,10 +20,9 @@
     let tableRows: types.Qso[] = $state<types.Qso[]>([]);
     let selections: number[] = $state([]);
     let allSelected = $state(false);
-    let pageSize = $state(configState.pageSize);
     let editQsoId = $state(0);
 
-    const fetchPagedQsos = async (pageNum: number): Promise<void> => {
+    const fetchPagedQsos = async (pageNum: number, pageSize: number): Promise<void> => {
         try {
             tableRows = await GetQsoSlice(configState.logbook.id, pageNum, pageSize, sqlite.Ordering.DESC);
         } catch (e: unknown) {
@@ -73,7 +72,7 @@
     onMount(async (): Promise<void> => {
         try {
             totalItems = await GetQsoCount(configState.logbook.id);
-            await fetchPagedQsos(pageNum);
+            await fetchPagedQsos(pageNum, configState.pageSize);
         } catch (e: unknown) {
             handleAsyncError(e, 'LogbookCard.svelte->onMount()');
         }
@@ -173,7 +172,7 @@
 {#if sendEmailState.dialogOpen}
     <EmailDialog {selections}/>
 {/if}
-<Pagination callback={fetchPagedQsos} pageNum={pageNum} totalItems={totalItems} pageSize={pageSize}/>
+<Pagination callback={fetchPagedQsos} pageNum={pageNum} totalItems={totalItems}/>
 
 {#snippet uploadStatus(qso: types.Qso)}
     <span class="flex items-center">

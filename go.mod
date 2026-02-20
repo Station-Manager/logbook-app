@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/Station-Manager/config v0.0.41
-	github.com/Station-Manager/database v0.0.59
+	github.com/Station-Manager/database v0.0.60
 	github.com/Station-Manager/email v0.0.8
 	github.com/Station-Manager/enums v0.0.8
 	github.com/Station-Manager/errors v0.0.11

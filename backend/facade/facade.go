@@ -151,7 +151,7 @@ func (s *Service) SetCurrentLogbook(id int64) error {
 	return nil
 }
 
-func (s *Service) GetQsoSlice(logbookId int64, pageNum int, pageSize int, ordering sqlite.Ordering) ([]types.Qso, error) {
+func (s *Service) GetQsoSlice(logbookId, pageNum, pageSize int64, ordering sqlite.Ordering) ([]types.Qso, error) {
 	const op errors.Op = "facade.Service.GetQsoSlice"
 
 	if !s.initialized.Load() {
