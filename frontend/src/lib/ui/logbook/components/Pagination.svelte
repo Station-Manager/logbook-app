@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {configState} from "$lib/states/config-state.svelte.ts";
+    import {configState} from "$lib/states/config-state.svelte";
 
     interface Props {
         callback: (page: number) => void;
@@ -58,7 +58,10 @@
 <div class="flex flex-row h-11.75 bg-white items-center justify-between mx-2">
     <div class="flex flex-row space-x-2 items-center text-sm text-gray-700">
         <label for="page_size" class="">Page Size</label>
-        <select id="page_size" class="w-16 focus:outline-2 focus:outline-indigo-600 rounded-md">
+        <select
+                bind:value={pageSize}
+                id="page_size"
+                class="w-16 focus:outline-2 focus:outline-indigo-600 rounded-md">
             <option value="{configState.pageSize}">{configState.pageSize}</option>
             <option value="50">50</option>
             <option value="100">100</option>
