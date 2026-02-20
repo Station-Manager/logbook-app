@@ -35,7 +35,6 @@
             selections.push(rowId)
             allSelected = selections.length >= tableRows.length;
         }
-//        menuClose();
     };
 
     const deselect = (rowId: number): void => {
@@ -81,7 +80,7 @@
 
 <LogbookCardHeader/>
 <div class="relative h-160 border-b border-b-gray-300">
-    <div role="row" class="sticky flex flex-row items-center font-bold border-b mb-0.75 h-8 border-gray-400">
+    <div role="row" class="absolute flex flex-row items-center font-bold border-b mb-0.75 h-8.75 border-gray-400 w-full">
         <div class="w-8 pt-1">
             <Checkbox.Root bind:checked={allSelected} onCheckedChange={(v) => {toggleAll(v);}} class="ring w-4 h-4 mx-2 rounded ring-gray-400">
                 {#snippet children({checked})}
@@ -94,7 +93,7 @@
             </Checkbox.Root>
         </div>
         {#if selections.length > 0}
-            <div class="absolute top-25 left-8 z-20 bg-white h-7 w-27.5 items-center flex pl-1 space-x-3">
+            <div class="absolute left-8 z-200 bg-white h-7 w-27.5 items-center flex pl-1 space-x-3">
                 <button class="cursor-pointer font-semibold text-indigo-500 hover:text-indigo-700" aria-label="export selected QSOs" title="Export selected QSOs">
                     <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
@@ -130,7 +129,7 @@
             </svg>
         </div>
     </div>
-    <div role="table" class="relative h-150 overflow-y-scroll">
+    <div role="table" class="absolute top-9 h-150.5 pt-0.25 overflow-y-scroll w-full">
         {#each tableRows as qso, index (qso.id)}
             <div id="row-{index}" role="row" class="flex flex-row odd:bg-white even:bg-gray-200">
                 <Checkbox.Root
