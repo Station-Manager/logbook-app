@@ -129,7 +129,7 @@
             </svg>
         </div>
     </div>
-    <div role="table" class="absolute top-9 h-150.5 pt-0.25 overflow-y-scroll w-full">
+    <div role="table" class="absolute top-9 h-150.5 pt-px overflow-y-scroll w-full">
         {#each tableRows as qso, index (qso.id)}
             <div id="row-{index}" role="row" class="flex flex-row odd:bg-white even:bg-gray-200">
                 <Checkbox.Root
