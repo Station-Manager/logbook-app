@@ -80,8 +80,8 @@
 </script>
 
 <LogbookCardHeader/>
-<div class="h-158 overflow-y-scroll">
-    <div role="row" class="flex flex-row items-center font-bold border-b mb-0.75 h-8 border-gray-400">
+<div class="relative h-160 border-b border-b-gray-300">
+    <div role="row" class="sticky flex flex-row items-center font-bold border-b mb-0.75 h-8 border-gray-400">
         <div class="w-8 pt-1">
             <Checkbox.Root bind:checked={allSelected} onCheckedChange={(v) => {toggleAll(v);}} class="ring w-4 h-4 mx-2 rounded ring-gray-400">
                 {#snippet children({checked})}
@@ -130,7 +130,7 @@
             </svg>
         </div>
     </div>
-    <div role="table">
+    <div role="table" class="relative h-150 overflow-y-scroll">
         {#each tableRows as qso, index (qso.id)}
             <div id="row-{index}" role="row" class="flex flex-row odd:bg-white even:bg-gray-200">
                 <Checkbox.Root
@@ -162,6 +162,7 @@
         {/each}
     </div>
 </div>
+<Pagination callback={fetchPagedQsos} pageNum={pageNum} totalItems={totalItems}/>
 {#if qsoEditState.panelOpen}
 <div class="absolute top-25 left-0 w-full h-164.25 bg-gray-200 opacity-90 z-10">
     <div class="bg-white rounded-lg m-8 h-150 p-8 shadow-2xl">
@@ -172,7 +173,6 @@
 {#if sendEmailState.dialogOpen}
     <EmailDialog {selections}/>
 {/if}
-<Pagination callback={fetchPagedQsos} pageNum={pageNum} totalItems={totalItems}/>
 
 {#snippet uploadStatus(qso: types.Qso)}
     <span class="flex items-center">

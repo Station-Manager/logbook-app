@@ -1,5 +1,5 @@
 <script lang="ts">
-import {configState} from "$lib/states/config-state.svelte.ts";
+import {configState} from "$lib/states/config-state.svelte";
 </script>
 
 <header class="flex items-center h-12.5 pl-4 border-b border-b-gray-300">

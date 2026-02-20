@@ -14,6 +14,6 @@
 	<SvelteToast/>
 	<MainNav/>
 </header>
-<main>
+<main class="relative">
 	{@render children()}
 </main>

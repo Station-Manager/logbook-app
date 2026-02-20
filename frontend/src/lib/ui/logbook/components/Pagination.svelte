@@ -63,17 +63,17 @@
     });
 </script>
 
-<div class="flex flex-row h-11.75 bg-white items-center justify-between mx-2">
+<div class="sticky flex flex-row h-11 bg-white items-center justify-between px-2">
     <div class="flex flex-row space-x-2 items-center text-sm text-gray-700">
-        <label for="page_size" class="">Page Size</label>
+        <label for="page_size" class="ml-2">Page Size</label>
         <select
                 onchange={onChangePageSize}
                 id="page_size"
                 class="w-16 focus:outline-2 focus:outline-indigo-600 rounded-md">
             <option value="{configState.pageSize}">{configState.pageSize}</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-            <option value="200">200</option>
+            <option value="{Math.floor(configState.pageSize*2)}">{Math.floor(configState.pageSize*2)}</option>
+            <option value="{Math.floor(configState.pageSize*4)}">{Math.floor(configState.pageSize*4)}</option>
+            <option value="{Math.floor(configState.pageSize*8)}">{Math.floor(configState.pageSize*8)}</option>
             <option value="all">All</option>
         </select>
     </div>
