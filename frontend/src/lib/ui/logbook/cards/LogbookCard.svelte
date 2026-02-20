@@ -163,7 +163,7 @@
 </div>
 <Pagination callback={fetchPagedQsos} pageNum={pageNum} totalItems={totalItems}/>
 {#if qsoEditState.panelOpen}
-<div class="absolute top-25 left-0 w-full h-164.25 bg-gray-200 opacity-90 z-10">
+<div class="absolute top-14 left-0 w-full h-170 bg-gray-200 opacity-90 z-10">
     <div class="bg-white rounded-lg m-8 h-150 p-8 shadow-2xl">
     <EditQsoPanel qsoId={editQsoId}/>
     </div>
