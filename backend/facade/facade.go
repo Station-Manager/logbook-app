@@ -196,7 +196,7 @@ func (s *Service) GetQsoCount(logbookId int64) (int64, error) {
 	}
 
 	if logbookId < 1 {
-		return -1, errors.New(op).Msg("Logbook ID must be greater than 0")
+		return -1, errors.New(op).Msgf("Invalid logbook ID: %d", logbookId)
 	}
 
 	count, err := s.DatabaseService.FetchQsoCountByLogbookId(logbookId)
@@ -266,4 +266,27 @@ func (s *Service) ForwardQsosViaEmail(slice []int64, recipientEmail string) erro
 	}
 
 	return nil
+}
+
+// GetQsoById retrieves a single QSO record from the database based on the provided ID. Returns an error if the operation fails.
+func (s *Service) GetQsoById(id int64) (types.Qso, error) {
+	const op errors.Op = "facade.Service.GetQsoById"
+	if !s.initialized.Load() {
+		err := errors.New(op).Msg(errMsgServiceNotInit)
+		s.LoggerService.ErrorWith().Err(err).Msg(errMsgServiceNotInit)
+		return types.Qso{}, err
+	}
+
+	if id < 1 {
+		return types.Qso{}, errors.New(op).Msgf("Invalid QSO ID: %d", id)
+	}
+
+	qso, err := s.DatabaseService.FetchQsoById(id)
+	if err != nil {
+		err = errors.New(op).Err(err)
+		s.LoggerService.ErrorWith().Err(err).Msgf("Failed to fetch QSO with ID: %d", id)
+		return qso, err
+	}
+
+	return qso, nil
 }
