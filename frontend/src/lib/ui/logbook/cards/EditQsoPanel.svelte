@@ -1,18 +1,18 @@
 <script lang="ts">
-//    import {getFocusContext} from "$lib/states/focus-context.svelte";
     import {onMount} from "svelte";
     import {qsoEditState} from "$lib/states/qso-edit-state.svelte";
     import FormControls from "$lib/ui/logbook/components/FormControls.svelte";
-import {inputBase, inputBaseUppercase, parseDatabaseFreqToDottedKhz} from "@station-manager/shared-utils";
+    import {inputBase, inputBaseUppercase, parseDatabaseFreqToDottedKhz} from "@station-manager/shared-utils";
     import {types} from "$lib/wailsjs/go/models";
     import {GetQsoById} from "$lib/wailsjs/go/facade/Service";
     import {handleAsyncError} from "$lib/utils/error-handler";
+    import {getFocusContext} from "@station-manager/shared-utils/svelte";
 
     interface Props {
         qsoId: number
     }
 
-//    const focusContext = getFocusContext();
+    const focusContext = getFocusContext();
 
     let {qsoId}: Props = $props();
     let qso: types.Qso = $state(new types.Qso());
@@ -34,7 +34,9 @@ import {inputBase, inputBaseUppercase, parseDatabaseFreqToDottedKhz} from "@stat
 
     onMount(async (): Promise<void> => {
        console.log("EditQsoPanel mounted:", {qsoId});
+
        try {
+           await getFocusContext().focus('callsignInput');
            qso = await GetQsoById(qsoId);
        } catch (e: unknown) {
            handleAsyncError(e, 'EditQsoPanel.svelte:onMount')
@@ -44,11 +46,12 @@ import {inputBase, inputBaseUppercase, parseDatabaseFreqToDottedKhz} from "@stat
 
 <div>
     <div class="flex h-126">
-    <div class="flex flex-row gap-x-4 h-32 w-full border">
+    <div class="flex flex-row gap-x-4 h-32 w-full">
         <div class="w-37.5">
             <label for="call">Callsign</label>
             <input
                     bind:value={qso.call}
+                    bind:this={focusContext.refs.callsignInput}
                     id="call"
                     autocomplete="off"
                     spellcheck="false"
