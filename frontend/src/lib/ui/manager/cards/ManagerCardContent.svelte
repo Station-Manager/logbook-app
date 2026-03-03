@@ -51,10 +51,7 @@
             callsignInput.focus();
             return;
         }
-        if (logbookState.id === 1) {
-            showToast.ERROR("You cannot delete the default logbook.");
-            return;
-        }
+        console.log("submitLogbookAction: ", a);
         switch (a) {
             case Action.CREATE: {
                 const lb = logbookState.toLogbook();
@@ -65,6 +62,10 @@
                 break;
             }
             case Action.DELETE: {
+                if (logbookState.id === 1) {
+                    showToast.ERROR("You cannot delete the default logbook.");
+                    return;
+                }
                 deleteLogbook(logbookState.id);
                 break;
             }
