@@ -1,4 +1,4 @@
-// logbook-app
+// Package facade: logbook-app
 package facade
 
 import (

@@ -10,8 +10,7 @@ export const ssr = false;
 
 export const load = async (): Promise<void> => {
     try {
-        const cfg: types.UiConfig | null | undefined = await FetchUiConfig();
-        let activeCfg = cfg;
+        let activeCfg: types.UiConfig = await FetchUiConfig();
         if (!activeCfg) {
             const msg = 'UiConfig fetch returned null or undefined; using defaults.';
             LogError(msg);

@@ -6,6 +6,7 @@
     import {showToast} from "$lib/utils/toast";
     import {handleAsyncError} from "$lib/utils/error-handler";
     import {ForwardQsosViaEmail} from "$lib/wailsjs/go/facade/Service";
+    import {configState} from "$lib/states/config-state.svelte";
 
     interface Props {
         selections: number[]
@@ -53,6 +54,7 @@
     }
 
     onMount(async (): Promise<void> => {
+        sendEmailFormState.email = configState.defaultEmail;
         await focusContext.focus('fwdSessionEmailInput');
     })
 </script>
