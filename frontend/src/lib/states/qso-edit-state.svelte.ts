@@ -1,5 +1,9 @@
 import { types } from '$lib/wailsjs/go/models';
-import { formatDate, formatTime } from '@station-manager/shared-utils';
+import {
+    formatDate,
+    formatTime,
+    parseDatabaseFreqToDottedKhz,
+} from '@station-manager/shared-utils';
 
 export interface QsoEditState {
     original: types.Qso;
@@ -10,6 +14,7 @@ export interface QsoEditState {
     freq: string;
     freq_rx: string;
     qso_date: string;
+    qso_date_off: string;
     time_on: string;
     time_off: string;
     rst_sent: string;
@@ -40,6 +45,7 @@ export const qsoEditState: QsoEditState = $state({
     freq: '',
     freq_rx: '',
     qso_date: '',
+    qso_date_off: '',
     time_on: '',
     time_off: '',
     rst_sent: '',
@@ -66,13 +72,14 @@ export const qsoEditState: QsoEditState = $state({
         this.rst_rcvd = qso.rst_rcvd ?? '';
         this.mode = qso.mode ?? '';
         this.submode = qso.submode;
-        this.freq = qso.freq ?? '';
-        this.freq_rx = qso.freq_rx;
+        this.freq = parseDatabaseFreqToDottedKhz(qso.freq) ?? '';
+        this.freq_rx = parseDatabaseFreqToDottedKhz(qso.freq_rx) ?? '';
         this.name = qso.name;
         this.qth = qso.qth;
         this.comment = qso.comment;
         this.notes = qso.notes;
         this.qso_date = formatDate(qso.qso_date);
+        this.qso_date_off = formatDate(qso.qso_date_off);
         this.time_on = formatTime(qso.time_on);
         this.time_off = formatTime(qso.time_off);
         this.rig = qso.rig;
@@ -103,6 +110,7 @@ export const qsoEditState: QsoEditState = $state({
         qsoObject.comment = this.comment;
         qsoObject.notes = this.notes;
         qsoObject.qso_date = this.qso_date;
+        qsoObject.qso_date_off = this.qso_date_off;
         qsoObject.time_on = this.time_on;
         qsoObject.time_off = this.time_off;
         qsoObject.rx_pwr = this.rx_pwr;

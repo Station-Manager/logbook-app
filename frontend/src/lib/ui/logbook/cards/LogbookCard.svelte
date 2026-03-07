@@ -60,7 +60,6 @@
 
     const editQso = (qsoId: number): void => {
         try {
-            console.log(`Edit QSO with ID: ${qsoId}`);
             qsoEditState.panelOpen = true;
             editQsoId = qsoId;
         } catch (e: unknown) {
