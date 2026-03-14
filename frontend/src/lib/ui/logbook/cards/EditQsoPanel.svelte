@@ -56,12 +56,12 @@
                 <label for="band" class={labelCss}>Band</label>
                 <input
                         id="band"
-                    type="text"
-                    bind:value={qso.band}
-                    class={inputBase}
-                    autocomplete="off"
-                    spellcheck="false"
-                    disabled/>
+                        type="text"
+                        bind:value={qso.band}
+                        class={inputBase}
+                        autocomplete="off"
+                        spellcheck="false"
+                        disabled/>
             </div>
             <div class={cellWidth}>
                 <label for="freq" class={labelCss}>Frequency</label>
@@ -72,7 +72,7 @@
                         class={inputBase}
                         autocomplete="off"
                         spellcheck="false"
-                        disabled/>
+                        />
             </div>
             <div class={cellWidth}>
                 <label for="freq_rx" class={labelCss}>Frequency RX</label>
@@ -86,9 +86,9 @@
                         disabled/>
             </div>
             <div class={cellWidth}>
-                <label for="freq_rx" class={labelCss}>Main Mode</label>
+                <label for="main_mode" class={labelCss}>Main Mode</label>
                 <div class="{selectWrapper}">
-                    <select class={selectBase} bind:value={qso.mode}>
+                    <select id="main_mode" class={selectBase} bind:value={qso.mode}>
                         <option value="SSB">SSB</option>
                         <option value="CW">CW</option>
                     </select>
@@ -98,9 +98,9 @@
                 </div>
             </div>
             <div class={cellWidth}>
-                <label for="freq_rx" class={labelCss}>Sub Mode</label>
+                <label for="sub_mode" class={labelCss}>Sub Mode</label>
                 <div class="{selectWrapper}">
-                    <select class={selectBase} bind:value={qso.submode}>
+                    <select id="sub_mode" class={selectBase} bind:value={qso.submode}>
                         <option value="USB">USB</option>
                         <option value="LSB">LSB</option>
                     </select>
@@ -147,6 +147,26 @@
                         id="time_off"
                         type="time"
                         bind:value={qso.time_off}
+                        class={inputBase}
+                        autocomplete="off"
+                        spellcheck="false"/>
+            </div>
+            <div class={cellWidth}>
+                <label for="rst_sent" class={labelCss}>RST Sent</label>
+                <input
+                        id="rst_sent"
+                        type="text"
+                        bind:value={qso.rst_sent}
+                        class={inputBase}
+                        autocomplete="off"
+                        spellcheck="false"/>
+            </div>
+            <div class={cellWidth}>
+                <label for="rst_rcvd" class={labelCss}>RST Rcvd</label>
+                <input
+                        id="rst_rcvd"
+                        type="text"
+                        bind:value={qso.rst_rcvd}
                         class={inputBase}
                         autocomplete="off"
                         spellcheck="false"/>
