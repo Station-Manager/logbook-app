@@ -16,6 +16,7 @@
 
     const focusContext = getFocusContext();
     const labelCss = labelBase + " mb-2";
+    const cellWidth = "w-34";
 
     let {qsoId}: Props = $props();
     let qso: QsoEditState = $state(qsoEditState);
@@ -41,7 +42,7 @@
 <div>
     <div class="flex flex-col h-126">
         <div class="flex flex-row gap-x-4 h-20 w-full">
-            <div class="w-37.5">
+            <div class={cellWidth}>
                 <label for="call" class={labelCss}>Callsign</label>
                 <input
                         bind:value={qso.call}
@@ -51,7 +52,7 @@
                         spellcheck="false"
                         class={inputBaseUppercase}/>
             </div>
-            <div class="w-37.5">
+            <div class={cellWidth}>
                 <label for="band" class={labelCss}>Band</label>
                 <input
                         id="band"
@@ -62,7 +63,7 @@
                     spellcheck="false"
                     disabled/>
             </div>
-            <div class="w-37.5">
+            <div class={cellWidth}>
                 <label for="freq" class={labelCss}>Frequency</label>
                 <input
                         id="freq"
@@ -73,7 +74,7 @@
                         spellcheck="false"
                         disabled/>
             </div>
-            <div class="w-37.5">
+            <div class={cellWidth}>
                 <label for="freq_rx" class={labelCss}>Frequency RX</label>
                 <input
                         id="freq_rx"
@@ -84,8 +85,20 @@
                         spellcheck="false"
                         disabled/>
             </div>
-            <div class="w-37.5">
-                <label for="freq_rx" class={labelCss}>Mode</label>
+            <div class={cellWidth}>
+                <label for="freq_rx" class={labelCss}>Main Mode</label>
+                <div class="{selectWrapper}">
+                    <select class={selectBase} bind:value={qso.mode}>
+                        <option value="SSB">SSB</option>
+                        <option value="CW">CW</option>
+                    </select>
+                    <svg class="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" data-slot="icon">
+                        <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+            <div class={cellWidth}>
+                <label for="freq_rx" class={labelCss}>Sub Mode</label>
                 <div class="{selectWrapper}">
                     <select class={selectBase} bind:value={qso.submode}>
                         <option value="USB">USB</option>
@@ -98,7 +111,7 @@
             </div>
         </div>
         <div class="flex flex-row gap-x-4 h-32 w-full">
-            <div class="w-37.5">
+            <div class={cellWidth}>
                 <label for="date_on" class={labelCss}>Date On</label>
                 <input
                         id="date_on"
@@ -108,7 +121,7 @@
                         autocomplete="off"
                         spellcheck="false"/>
             </div>
-            <div class="w-37.5">
+            <div class={cellWidth}>
                 <label for="date_off" class={labelCss}>Date Off</label>
                 <input
                         id="date_off"
@@ -118,7 +131,7 @@
                         autocomplete="off"
                         spellcheck="false"/>
             </div>
-            <div class="w-37.5">
+            <div class={cellWidth}>
                 <label for="time_on" class={labelCss}>Time On</label>
                 <input
                         id="time_on"
@@ -128,7 +141,7 @@
                         autocomplete="off"
                         spellcheck="false"/>
             </div>
-            <div class="w-37.5">
+            <div class={cellWidth}>
                 <label for="time_off" class={labelCss}>Time Off</label>
                 <input
                         id="time_off"
